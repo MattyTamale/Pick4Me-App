@@ -5,12 +5,17 @@ import React, { Component } from 'react';
 //Set the limit of results to 50 that way the results can be randomized and
 //shown to the user using math.random() and show/hide methods
 
+//'search' returns all results within a given area; 'explore' returns
+//recommended results within a given area.
+
 class App extends Component {
     constructor(props){
         super(props)
         this.state = {
             baseURL: 'https://api.foursquare.com/v2/',
             search: 'venues/search?',
+            explore: 'venues/explore?',
+            price: '&price=',
             location: 'near=',
             radius: '&radius=500',
             code: 200,
@@ -23,7 +28,9 @@ class App extends Component {
             searchURL: '',
             currentCity: '',
             venues: [],
-            results: false
+            results: false,
+            venue: '',
+            cost: ''
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -33,7 +40,7 @@ class App extends Component {
     //============================
     //PROPER FOURSQUARE URL SETUP
     //============================
-    //https://api.foursquare.com/v2/venues/search?ll=40.7,-74&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&v=YYYYMMDD
+    //https://api.foursquare.com/v2/venues/search?near=san_diego,_ca&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&v=YYYYMMDD
 
 
     //============================
@@ -52,8 +59,10 @@ class App extends Component {
         event.preventDefault()
         console.log(this.state.currentCity);
         let area = this.state.currentCity;
+        let cost = this.state.cost;
         this.setState({
-            location: `near=${area}`
+            location: `near=${area}`,
+            price: `&price=${cost}`
         })
     }
 
@@ -77,7 +86,7 @@ class App extends Component {
     handleSubmit (event) {
       event.preventDefault()
       this.setState({
-        searchURL: this.state.baseURL + this.state.search + this.state.location + this.state.radius + this.state.query + this.state.limit + this.state.client_id + this.state.client_secret + this.state.v
+        searchURL: this.state.baseURL + this.state.explore + this.state.location + this.state.radius + this.state.query + this.state.limit + this.state.price + this.state.client_id + this.state.client_secret + this.state.v
       }, () => {
         console.log(this.state.searchURL)
         fetch(this.state.searchURL)
@@ -86,12 +95,22 @@ class App extends Component {
         }).then(json => {
             console.log(json);
             this.setState({
-                venues: json.response.venues,
-                results: true
+                venues: json.response.groups[0].items,
+                results: true,
+                venue: json.response.groups[0].items[Math.floor(json.response.groups[0].items.length * Math.random())].venue
             })
         }).catch(err => console.log(err))
       })
     }
+
+
+    //=================
+    //PREVENT INFINITE
+    //=================
+
+    // componentDidMount(){
+    //     this.fetchFavorites()
+    // }
 
     render(){
         return (
@@ -108,12 +127,22 @@ class App extends Component {
                             placeholder='City, State'
                             value={this.state.currentCity}
                         />
+                        <input
+                            id='cost'
+                            type='text'
+                            onChange={this.handleChange}
+                            placeholder='Price Point: 1, 2, 3, or 4'
+                            value={this.state.cost}
+                        />
                         <button type='submit'>Submit</button>
                     </form>
                 </div>
                 <div>
                     {this.state.results ?
-                        <h2>{this.state.venues[Math.floor(this.state.venues.length * Math.random())].name}</h2>
+                        <div>
+                            <h2>{this.state.venue.name}</h2>
+                            <h3>{this.state.venue.categories[0].name}</h3>
+                        </div>
                         : ''
                     }
                 </div>
