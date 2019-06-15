@@ -12,15 +12,18 @@ class App extends Component {
             baseURL: 'https://api.foursquare.com/v2/',
             search: 'venues/search?',
             location: 'near=',
-            radius: '&radius=250',
+            radius: '&radius=500',
             code: 200,
             limit: '&limit=50',
             client_id: '&client_id=FAKQIEROR2HUJGJXALMHBCNMLM5HSIULTXO21UKSNS1IVN13',
             client_secret: '&client_secret=MEC1NRC3Z0EYTO41JTP5HCBYCBLSGNP3KHBY3P1INKWUPEBY',
             query: '&query=restaurant',
             v: '&v=20191231',
+            intent: '&intent=browse',
             searchURL: '',
-            currentCity: ''
+            currentCity: '',
+            venues: [],
+            results: false
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -80,8 +83,13 @@ class App extends Component {
         fetch(this.state.searchURL)
           .then(response => {
             return response.json()
-          }).then(json => console.log(json),
-            err => console.log(err))
+        }).then(json => {
+            console.log(json);
+            this.setState({
+                venues: json.response.venues,
+                results: true
+            })
+        }).catch(err => console.log(err))
       })
     }
 
@@ -102,6 +110,12 @@ class App extends Component {
                         />
                         <button type='submit'>Submit</button>
                     </form>
+                </div>
+                <div>
+                    {this.state.results ?
+                        <h2>{this.state.venues[Math.floor(this.state.venues.length * Math.random())].name}</h2>
+                        : ''
+                    }
                 </div>
             </div>
         )
