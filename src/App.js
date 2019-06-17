@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Favorites from './components/Favorites.js';
 // import './App.css';
 
 
@@ -140,11 +141,14 @@ class App extends Component {
                 <div>
                     {this.state.results ?
                         <div>
-                            <h2>{this.state.venue.name}</h2>
-                            <h3>{this.state.venue.categories[0].name}</h3>
+                            <h2>Name of Restaurant: {this.state.venue.name}</h2>
+                            <h3>Style of Food: {this.state.venue.categories[0].name}</h3>
                         </div>
                         : ''
                     }
+                </div>
+                <div>
+                    <Favorites />
                 </div>
             </div>
         )
