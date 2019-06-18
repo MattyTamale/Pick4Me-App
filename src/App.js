@@ -32,7 +32,9 @@ class App extends Component {
             results: false,
             venue: '',
             cost: '',
-            favorites: []
+            favorites: [],
+            newFavorite: [],
+            comments: ''
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -41,6 +43,8 @@ class App extends Component {
         this.fetchFavorites = this.fetchFavorites.bind(this);
         this.handleCreateFavorite = this.handleCreateFavorite.bind(this);
         this.updateFavoritesArray = this.updateFavoritesArray.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        // this.handleCreate = this.handleCreate.bind(this);
     }
 
     //============================
@@ -125,8 +129,19 @@ class App extends Component {
       })
     }
 
-    handleCreateFavorite(favorite) {
-    fetch('https://localhost:3000/favorites', {
+    //===============
+    //CREATE METHOD
+    //==============
+
+    handleCreateFavorite() {
+        let favorite = {
+           name: this.state.venue.name,
+           shortname: this.state.venue.categories[0].shortName,
+           address: this.state.venue.location.address,
+           city: this.state.currentCity,
+           comments: ''
+           }
+        fetch('http://localhost:3000/favorites', {
         body: JSON.stringify(favorite),
         method: 'POST',
         headers: {
@@ -140,16 +155,49 @@ class App extends Component {
         }).catch( err => console.log(err));
     }
 
-    updateFavoritesArray(favorites, array){
-        console.log("this is favorites:", favorites);
-        console.log("this is array:", array);
+    updateFavoritesArray(favorite, array){
+        console.log("this is favorites:", favorite);
     this.setState( prevState => {
-        prevState[array].push(favorites)
+        prevState[array].push(favorite)
         return {
             [array]: prevState[array]
             }
         })
     }
+
+
+    //============================
+    //UPDATE METHOD/LEAVE COMMENTS
+    //============================
+
+
+
+
+
+    //==============================================
+    //DELETE METHOD AND REMOVAL FROM FAVORITES ARRAY
+    //==============================================
+
+    handleDelete(id, index, array){
+        console.log('this is delete', id, index, array);
+        fetch(`http://localhost:3000/favorites/${id}`, {
+            method: 'DELETE'
+        })
+        .then(data => {
+            console.log("It's been deleted, trust me");
+            this.removeFromArray(array, index)
+        }).catch( err => console.log('this is error from handleDelete:', err))
+    }
+
+    removeFromArray(array, index){
+        this.setState(prevState => {
+            console.log("this is prevState:", prevState.favorites);
+            prevState.favorites.splice(index, 1)
+            return {
+                [array]: prevState.favorites
+                }
+            })
+        }
 
     //===============
     //FETCH REQUESTS
@@ -204,7 +252,7 @@ class App extends Component {
                         <div>
                             <h2>Name of Restaurant: {this.state.venue.name}</h2>
                             <h3>Style of Food: {this.state.venue.categories[0].name}</h3>
-                            <button onClick={this.handleFavorites}>Add to Favorites</button>
+                            <button onClick={this.handleCreateFavorite}>Add to Favorites</button>
                         </div>
                         : ''
                     }
@@ -212,7 +260,7 @@ class App extends Component {
                 <div>
                     <Favorites
                         favorites={this.state.favorites}
-                        results={this.state.results}
+                        handleDelete={this.handleDelete}
                     />
                 </div>
             </div>

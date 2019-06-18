@@ -12,6 +12,8 @@ class Favorites extends Component {
                         return (
                             <div key={index}>
                                 <h3>{restaurant.name}</h3>
+                                <button onClick={() => {this.props.handleDelete(restaurant.id, index, this.props.favorites)}}>Delete</button>
+                                <button>Leave a Note</button>
                             </div>
                         )
                     })
