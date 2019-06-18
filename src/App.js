@@ -44,6 +44,7 @@ class App extends Component {
         this.handleCreateFavorite = this.handleCreateFavorite.bind(this);
         this.updateFavoritesArray = this.updateFavoritesArray.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
         // this.handleCreate = this.handleCreate.bind(this);
     }
 
@@ -170,7 +171,27 @@ class App extends Component {
     //UPDATE METHOD/LEAVE COMMENTS
     //============================
 
-
+    handleUpdate(favorite, index, array, id){
+        console.log("this is favorite:", favorite);
+        console.log("this is index:", index);
+        console.log("this is array:", array);
+        console.log("this is id:", id);
+        fetch(`http://localhost:3000/favorites/${id}`, {
+            body: JSON.stringify(favorite),
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then( updatedFavorite => updatedFavorite.json())
+        .then(jData => {
+            console.log("this is jData", jData);
+            this.removeFromArray(array, index);
+            this.updateFavoritesArray(jData, 'favorites');
+            })
+        .catch(err => console.log('this is error from handleUpdate', err));
+    }
 
 
 
@@ -261,6 +282,9 @@ class App extends Component {
                     <Favorites
                         favorites={this.state.favorites}
                         handleDelete={this.handleDelete}
+                        handleUpdate={this.handleUpdate}
+                        handleChange={this.handleChange}
+                        comments={this.state.comments}
                     />
                 </div>
             </div>
