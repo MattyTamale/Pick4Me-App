@@ -31,11 +31,16 @@ class App extends Component {
             venues: [],
             results: false,
             venue: '',
-            cost: ''
+            cost: '',
+            favorites: []
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleFavorites = this.handleFavorites.bind(this);
+        this.fetchFavorites = this.fetchFavorites.bind(this);
+        this.handleCreateFavorite = this.handleCreateFavorite.bind(this);
+        this.updateFavoritesArray = this.updateFavoritesArray.bind(this);
     }
 
     //============================
@@ -80,6 +85,22 @@ class App extends Component {
 
 
     //========================
+    // HANDLE FAVORITES METHOD
+    //========================
+
+    handleFavorites(entry) {
+        this.setState(prevState => {
+            console.log("this is prevState:", prevState);
+            prevState.favorites.push(entry)
+            return {
+                favorites: prevState.favorites
+            }
+        })
+        console.log("this is favorites:", this.state.favorites);
+    }
+
+
+    //========================
     //FOURSQUARE FETCH METHOD
     //========================
 
@@ -104,14 +125,54 @@ class App extends Component {
       })
     }
 
+    handleCreateFavorite(favorite) {
+    fetch('https://localhost:3000/favorites', {
+        body: JSON.stringify(favorite),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        }
+        }).then( createdFavorites => {
+            return createdFavorites.json()
+        }).then( jData => {
+            this.updateFavoritesArray(jData, 'favorites')
+        }).catch( err => console.log(err));
+    }
+
+    updateFavoritesArray(favorites, array){
+        console.log("this is favorites:", favorites);
+        console.log("this is array:", array);
+    this.setState( prevState => {
+        prevState[array].push(favorites)
+        return {
+            [array]: prevState[array]
+            }
+        })
+    }
+
+    //===============
+    //FETCH REQUESTS
+    //===============
+
+    fetchFavorites(){
+        fetch('http://localhost:3000/favorites')
+            .then(data => data.json())
+        .then(jData => {
+            this.setState({
+                favorites: jData
+            })
+        })
+    }
+
 
     //=================
     //PREVENT INFINITE
     //=================
 
-    // componentDidMount(){
-    //     this.fetchFavorites()
-    // }
+    componentDidMount(){
+        this.fetchFavorites()
+    }
 
     render(){
         return (
@@ -143,12 +204,16 @@ class App extends Component {
                         <div>
                             <h2>Name of Restaurant: {this.state.venue.name}</h2>
                             <h3>Style of Food: {this.state.venue.categories[0].name}</h3>
+                            <button onClick={this.handleFavorites}>Add to Favorites</button>
                         </div>
                         : ''
                     }
                 </div>
                 <div>
-                    <Favorites />
+                    <Favorites
+                        favorites={this.state.favorites}
+                        results={this.state.results}
+                    />
                 </div>
             </div>
         )
