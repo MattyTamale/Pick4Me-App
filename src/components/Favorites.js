@@ -57,7 +57,7 @@ class Favorites extends Component {
                                     />
                                     : ''
                                 }
-                                <button onClick={() => {this.props.handleDelete(restaurant.id, index, this.props.favorites)}}>Delete</button>
+                                <button onClick={() => {this.props.handleFavoriteDelete(restaurant.id, index, this.props.favorites, this.props.comments[index].id, this.props.comments)}}>Delete</button>
                                 <button onClick={this.toggleForm}>Leave a Note</button>
                                 {this.state.showForm ?
                                     <Comments

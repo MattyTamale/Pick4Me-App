@@ -12,7 +12,7 @@ class UpdateForm extends Component {
     handleSubmit = (event) => {
          event.preventDefault();
          console.log("this is comments:", this.props.favorites[this.props.index]);
-         this.props.handleUpdate(this.state.comment, this.props.favorites, this.props.favorites[this.props.index], this.props.comments[this.props.index].id)
+         this.props.handleUpdate(this.state.comment, this.props.comments, this.props.favorites[this.props.index], this.props.comments[this.props.index].id)
     }
 
     handleChange = (event) => {

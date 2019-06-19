@@ -46,7 +46,8 @@ class App extends Component {
         this.handleCreateComment = this.handleCreateComment.bind(this);
         this.updateCommentsArray = this.updateCommentsArray.bind(this);
         this.updateFavoritesArray = this.updateFavoritesArray.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
+        this.handleFavoriteDelete = this.handleFavoriteDelete.bind(this);
+        this.handleCommentDelete = this.handleCommentDelete.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
         this.removeFromFavoritesArray = this.removeFromFavoritesArray.bind(this);
         this.removeFromCommentsArray = this.removeFromCommentsArray.bind(this);
@@ -193,7 +194,7 @@ class App extends Component {
     }
 
     updateCommentsArray(comment, array){
-        console.log("this is updated comments:", comment);
+        console.log("this is updated array:", [array]);
     this.setState( prevState => {
         console.log("this is prevState[array]", prevState[array]);
         prevState[array].push(comment)
@@ -234,7 +235,7 @@ class App extends Component {
     //DELETE METHOD AND REMOVAL FROM FAVORITES ARRAY
     //==============================================
 
-    handleDelete(id, index, array){
+    handleFavoriteDelete(id, index, array, commentsID, commentsArray){
         console.log('this is delete', id, index, array);
         fetch(`http://localhost:3000/favorites/${id}`, {
             method: 'DELETE'
@@ -243,6 +244,7 @@ class App extends Component {
             console.log("It's been deleted, trust me");
             this.removeFromFavoritesArray(array, index)
         }).catch( err => console.log('this is error from handleDelete:', err))
+        this.handleCommentDelete(commentsID, commentsArray);
     }
 
     removeFromFavoritesArray(array, index){
@@ -254,6 +256,17 @@ class App extends Component {
                 }
             })
         }
+
+    handleCommentDelete(id, array){
+        console.log('this is delete comment', id);
+        fetch(`http://localhost:3000/comments/${id}`, {
+            method: 'DELETE'
+        })
+        .then(data => {
+            console.log("It's been deleted, trust me");
+            this.removeFromCommentsArray(array, id)
+        }).catch( err => console.log('this is error from handleDelete:', err))
+    }
 
     removeFromCommentsArray(array, index){
         this.setState(prevState => {
@@ -336,7 +349,7 @@ class App extends Component {
                 <div>
                     <Favorites
                         favorites={this.state.favorites}
-                        handleDelete={this.handleDelete}
+                        handleFavoriteDelete={this.handleFavoriteDelete}
                         handleCreateComment={this.handleCreateComment}
                         handleChange={this.handleChange}
                         comments={this.state.comments}
