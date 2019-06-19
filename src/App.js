@@ -41,10 +41,13 @@ class App extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleFavorites = this.handleFavorites.bind(this);
         this.fetchFavorites = this.fetchFavorites.bind(this);
+        this.fetchComments = this.fetchComments.bind(this);
         this.handleCreateFavorite = this.handleCreateFavorite.bind(this);
+        this.handleCreateComment = this.handleCreateComment.bind(this);
+        this.updateCommentsArray = this.updateCommentsArray.bind(this);
         this.updateFavoritesArray = this.updateFavoritesArray.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
-        this.handleUpdate = this.handleUpdate.bind(this);
+        // this.handleUpdate = this.handleUpdate.bind(this);
         // this.handleCreate = this.handleCreate.bind(this);
     }
 
@@ -139,8 +142,7 @@ class App extends Component {
            name: this.state.venue.name,
            shortname: this.state.venue.categories[0].shortName,
            address: this.state.venue.location.address,
-           city: this.state.currentCity,
-           comments: ''
+           city: this.state.currentCity
            }
         fetch('http://localhost:3000/favorites', {
         body: JSON.stringify(favorite),
@@ -152,6 +154,8 @@ class App extends Component {
         }).then( createdFavorites => {
             return createdFavorites.json()
         }).then( jData => {
+            console.log("this is jData:", jData);
+            console.log("this is favorite:", favorite);
             this.updateFavoritesArray(jData, 'favorites')
         }).catch( err => console.log(err));
     }
@@ -166,32 +170,61 @@ class App extends Component {
         })
     }
 
+    handleCreateComment(comment, favoriteID) {
+        let newComment = {
+            note: comment,
+            favorite_id: favoriteID
+        }
+        fetch('http://localhost:3000/comments', {
+        body: JSON.stringify(newComment),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        }
+    }).then( createdComments => {
+            return createdComments.json()
+        }).then( jData => {
+            this.updateCommentsArray(jData, 'comments')
+        }).catch( err => console.log(err));
+        console.log("these are the comments:", this.state.comments);
+    }
+
+    updateCommentsArray(comment, array){
+        console.log("this is comment:", comment);
+    this.setState( prevState => {
+        prevState[array].push(comment)
+        return {
+            [array]: prevState[array]
+            }
+        })
+    }
 
     //============================
     //UPDATE METHOD/LEAVE COMMENTS
     //============================
 
-    handleUpdate(favorite, index, array, id){
-        console.log("this is favorite:", favorite);
-        console.log("this is index:", index);
-        console.log("this is array:", array);
-        console.log("this is id:", id);
-        fetch(`http://localhost:3000/favorites/${id}`, {
-            body: JSON.stringify(favorite),
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then( updatedFavorite => updatedFavorite.json())
-        .then(jData => {
-            console.log("this is jData", jData);
-            this.removeFromArray(array, index);
-            this.updateFavoritesArray(jData, 'favorites');
-            })
-        .catch(err => console.log('this is error from handleUpdate', err));
-    }
+    // handleUpdate(favorite, index, array, id){
+    //     console.log("this is favorite:", favorite);
+    //     console.log("this is index:", index);
+    //     console.log("this is array:", array);
+    //     console.log("this is id:", id);
+    //     fetch(`http://localhost:3000/favorites/${id}`, {
+    //         body: JSON.stringify(favorite),
+    //         method: 'PUT',
+    //         headers: {
+    //             'Accept': 'application/json, text/plain, */*',
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //     .then( updatedFavorite => updatedFavorite.json())
+    //     .then(jData => {
+    //         console.log("this is jData", jData);
+    //         this.removeFromArray(array, index);
+    //         this.updateFavoritesArray(jData, 'favorites');
+    //         })
+    //     .catch(err => console.log('this is error from handleUpdate', err));
+    // }
 
 
 
@@ -234,6 +267,15 @@ class App extends Component {
         })
     }
 
+    fetchComments(){
+        fetch('http://localhost:3000/comments')
+            .then(data => data.json())
+        .then(jData => {
+            this.setState({
+                comments: jData
+            })
+        })
+    }
 
     //=================
     //PREVENT INFINITE
@@ -241,6 +283,7 @@ class App extends Component {
 
     componentDidMount(){
         this.fetchFavorites()
+        this.fetchComments()
     }
 
     render(){
@@ -282,7 +325,7 @@ class App extends Component {
                     <Favorites
                         favorites={this.state.favorites}
                         handleDelete={this.handleDelete}
-                        handleUpdate={this.handleUpdate}
+                        handleCreateComment={this.handleCreateComment}
                         handleChange={this.handleChange}
                         comments={this.state.comments}
                     />

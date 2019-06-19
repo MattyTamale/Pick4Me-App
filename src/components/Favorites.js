@@ -7,15 +7,21 @@ class Favorites extends Component {
     constructor(){
         super()
         this.state = {
-            showForm: false
+            showForm: false,
+            showComment: false
         }
         this.toggleForm = this.toggleForm.bind(this);
+        this.showNote = this.showNote.bind(this);
     }
 
     toggleForm(event){
         this.setState({
             showForm: !this.state.showForm
         })
+    }
+
+    showNote(event){
+        console.log("this is comments:", this.props.comments);
     }
 
     render() {
@@ -26,17 +32,16 @@ class Favorites extends Component {
                     {this.props.favorites ? this.props.favorites.map((restaurant, index) => {
                         return (
                             <div key={index}>
-                                <h3>{restaurant.name}</h3>
-                                <p>{this.props.comments}</p>
+                                <h3 onClick={this.showNote}>{restaurant.name}</h3>
+                                {this.props.comments[index] ? <h4>{this.props.comments[index].note}</h4> : ''}
                                 <button onClick={() => {this.props.handleDelete(restaurant.id, index, this.props.favorites)}}>Delete</button>
                                 <button onClick={this.toggleForm}>Leave a Note</button>
                                 {this.state.showForm ?
                                     <Comments
-                                        handleUpdate={this.props.handleUpdate}
+                                        handleCreateComment={this.props.handleCreateComment}
                                         restaurant={restaurant}
                                         key={index}
                                         index={index}
-                                        comments={this.props.comments}
                                         favorites={this.props.favorites}
                                     />
                                 : ''
@@ -52,19 +57,18 @@ class Favorites extends Component {
     }
 }
 
+// <h4>{this.props.comments[index].note}</h4>
 
-// <div>
-//     Favorites will go here:
-//     {this.props.results ? this.props.favorites.map((name, index) => {
-//         return (
-//             <div>
-//                 <h3>{this.props.favorites.name}</h3>
-//             </div>
-//         )
-//     })
-//     : ''
-//     }
-// </div>
+// {this.state.showForm ?
+//     <Comments
+//         handleUpdate={this.props.handleUpdate}
+//         restaurant={restaurant}
+//         key={index}
+//         index={index}
+//         favorites={this.props.favorites}
+//     />
+// : ''
+// }
 
 
 export default Favorites;
