@@ -31,11 +31,26 @@ class App extends Component {
             venues: [],
             results: false,
             venue: '',
-            cost: ''
+            cost: '',
+            favorites: [],
+            newFavorite: [],
+            comments: ''
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleFavorites = this.handleFavorites.bind(this);
+        this.fetchFavorites = this.fetchFavorites.bind(this);
+        this.fetchComments = this.fetchComments.bind(this);
+        this.handleCreateFavorite = this.handleCreateFavorite.bind(this);
+        this.handleCreateComment = this.handleCreateComment.bind(this);
+        this.updateCommentsArray = this.updateCommentsArray.bind(this);
+        this.updateFavoritesArray = this.updateFavoritesArray.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
+        this.removeFromFavoritesArray = this.removeFromFavoritesArray.bind(this);
+        this.removeFromCommentsArray = this.removeFromCommentsArray.bind(this);
+        // this.handleCreate = this.handleCreate.bind(this);
     }
 
     //============================
@@ -80,6 +95,22 @@ class App extends Component {
 
 
     //========================
+    // HANDLE FAVORITES METHOD
+    //========================
+
+    handleFavorites(entry) {
+        this.setState(prevState => {
+            console.log("this is prevState:", prevState);
+            prevState.favorites.push(entry)
+            return {
+                favorites: prevState.favorites
+            }
+        })
+        console.log("this is favorites:", this.state.favorites);
+    }
+
+
+    //========================
     //FOURSQUARE FETCH METHOD
     //========================
 
@@ -104,14 +135,167 @@ class App extends Component {
       })
     }
 
+    //===============
+    //CREATE METHOD
+    //==============
+
+    handleCreateFavorite() {
+        let favorite = {
+           name: this.state.venue.name,
+           shortname: this.state.venue.categories[0].shortName,
+           address: this.state.venue.location.address,
+           city: this.state.currentCity
+           }
+        fetch('http://localhost:3000/favorites', {
+        body: JSON.stringify(favorite),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        }
+        }).then( createdFavorites => {
+            return createdFavorites.json()
+        }).then( jData => {
+            console.log("this is jData:", jData);
+            console.log("this is favorite:", favorite);
+            this.updateFavoritesArray(jData, 'favorites')
+        }).catch( err => console.log(err));
+    }
+
+    updateFavoritesArray(favorite, array){
+        console.log("this is favorites:", favorite);
+    this.setState( prevState => {
+        prevState[array].push(favorite)
+        return {
+            [array]: prevState[array]
+            }
+        })
+    }
+
+    handleCreateComment(comment, favoriteID) {
+        let newComment = {
+            note: comment,
+            favorite_id: favoriteID
+        }
+        fetch('http://localhost:3000/comments', {
+        body: JSON.stringify(newComment),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        }
+    }).then( createdComments => {
+            return createdComments.json()
+        }).then( jData => {
+            this.updateCommentsArray(jData, 'comments')
+        }).catch( err => console.log(err));
+        console.log("these are the comments:", this.state.comments);
+    }
+
+    updateCommentsArray(comment, array){
+        console.log("this is comment:", comment);
+    this.setState( prevState => {
+        prevState[array].push(comment)
+        return {
+            [array]: prevState[array]
+            }
+        })
+    }
+
+    //============================
+    //UPDATE METHOD/LEAVE COMMENTS
+    //============================
+
+    handleUpdate(comment, array, favoriteID, id){
+        let updateNote = {
+            note: comment
+        }
+        fetch(`http://localhost:3000/comments/${id}`, {
+            body: JSON.stringify(updateNote),
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then( updatedFavorite => updatedFavorite.json())
+        .then(jData => {
+            console.log("this is jData", jData);
+            this.removeFromCommentsArray(array, favoriteID);
+            this.updateCommentsArray(jData, 'comments');
+            })
+        .catch(err => console.log('this is error from handleUpdate', err));
+    }
+
+
+
+    //==============================================
+    //DELETE METHOD AND REMOVAL FROM FAVORITES ARRAY
+    //==============================================
+
+    handleDelete(id, index, array){
+        console.log('this is delete', id, index, array);
+        fetch(`http://localhost:3000/favorites/${id}`, {
+            method: 'DELETE'
+        })
+        .then(data => {
+            console.log("It's been deleted, trust me");
+            this.removeFromFavoritesArray(array, index)
+        }).catch( err => console.log('this is error from handleDelete:', err))
+    }
+
+    removeFromFavoritesArray(array, index){
+        this.setState(prevState => {
+            console.log("this is prevState:", prevState.favorites);
+            prevState.favorites.splice(index, 1)
+            return {
+                [array]: prevState.favorites
+                }
+            })
+        }
+
+    removeFromCommentsArray(array, index){
+        this.setState(prevState => {
+            console.log("this is prevState:", prevState.comments);
+            prevState.comments.splice(index, 1)
+            return {
+                [array]: prevState.comments
+                }
+            })
+        }
+
+    //===============
+    //FETCH REQUESTS
+    //===============
+
+    fetchFavorites(){
+        fetch('http://localhost:3000/favorites')
+            .then(data => data.json())
+        .then(jData => {
+            this.setState({
+                favorites: jData
+            })
+        })
+    }
+
+    fetchComments(){
+        fetch('http://localhost:3000/comments')
+            .then(data => data.json())
+        .then(jData => {
+            this.setState({
+                comments: jData
+            })
+        })
+    }
 
     //=================
     //PREVENT INFINITE
     //=================
 
-    // componentDidMount(){
-    //     this.fetchFavorites()
-    // }
+    componentDidMount(){
+        this.fetchFavorites()
+        this.fetchComments()
+    }
 
     render(){
         return (
@@ -143,12 +327,20 @@ class App extends Component {
                         <div>
                             <h2>Name of Restaurant: {this.state.venue.name}</h2>
                             <h3>Style of Food: {this.state.venue.categories[0].name}</h3>
+                            <button onClick={this.handleCreateFavorite}>Add to Favorites</button>
                         </div>
                         : ''
                     }
                 </div>
                 <div>
-                    <Favorites />
+                    <Favorites
+                        favorites={this.state.favorites}
+                        handleDelete={this.handleDelete}
+                        handleCreateComment={this.handleCreateComment}
+                        handleChange={this.handleChange}
+                        comments={this.state.comments}
+                        handleUpdate={this.handleUpdate}
+                    />
                 </div>
             </div>
         )
