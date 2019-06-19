@@ -47,7 +47,9 @@ class App extends Component {
         this.updateCommentsArray = this.updateCommentsArray.bind(this);
         this.updateFavoritesArray = this.updateFavoritesArray.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
-        // this.handleUpdate = this.handleUpdate.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
+        this.removeFromFavoritesArray = this.removeFromFavoritesArray.bind(this);
+        this.removeFromCommentsArray = this.removeFromCommentsArray.bind(this);
         // this.handleCreate = this.handleCreate.bind(this);
     }
 
@@ -204,27 +206,26 @@ class App extends Component {
     //UPDATE METHOD/LEAVE COMMENTS
     //============================
 
-    // handleUpdate(favorite, index, array, id){
-    //     console.log("this is favorite:", favorite);
-    //     console.log("this is index:", index);
-    //     console.log("this is array:", array);
-    //     console.log("this is id:", id);
-    //     fetch(`http://localhost:3000/favorites/${id}`, {
-    //         body: JSON.stringify(favorite),
-    //         method: 'PUT',
-    //         headers: {
-    //             'Accept': 'application/json, text/plain, */*',
-    //             'Content-Type': 'application/json'
-    //         }
-    //     })
-    //     .then( updatedFavorite => updatedFavorite.json())
-    //     .then(jData => {
-    //         console.log("this is jData", jData);
-    //         this.removeFromArray(array, index);
-    //         this.updateFavoritesArray(jData, 'favorites');
-    //         })
-    //     .catch(err => console.log('this is error from handleUpdate', err));
-    // }
+    handleUpdate(comment, array, favoriteID, id){
+        let updateNote = {
+            note: comment
+        }
+        fetch(`http://localhost:3000/comments/${id}`, {
+            body: JSON.stringify(updateNote),
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then( updatedFavorite => updatedFavorite.json())
+        .then(jData => {
+            console.log("this is jData", jData);
+            this.removeFromCommentsArray(array, favoriteID);
+            this.updateCommentsArray(jData, 'comments');
+            })
+        .catch(err => console.log('this is error from handleUpdate', err));
+    }
 
 
 
@@ -239,16 +240,26 @@ class App extends Component {
         })
         .then(data => {
             console.log("It's been deleted, trust me");
-            this.removeFromArray(array, index)
+            this.removeFromFavoritesArray(array, index)
         }).catch( err => console.log('this is error from handleDelete:', err))
     }
 
-    removeFromArray(array, index){
+    removeFromFavoritesArray(array, index){
         this.setState(prevState => {
             console.log("this is prevState:", prevState.favorites);
             prevState.favorites.splice(index, 1)
             return {
                 [array]: prevState.favorites
+                }
+            })
+        }
+
+    removeFromCommentsArray(array, index){
+        this.setState(prevState => {
+            console.log("this is prevState:", prevState.comments);
+            prevState.comments.splice(index, 1)
+            return {
+                [array]: prevState.comments
                 }
             })
         }
@@ -328,6 +339,7 @@ class App extends Component {
                         handleCreateComment={this.handleCreateComment}
                         handleChange={this.handleChange}
                         comments={this.state.comments}
+                        handleUpdate={this.handleUpdate}
                     />
                 </div>
             </div>
