@@ -193,8 +193,9 @@ class App extends Component {
     }
 
     updateCommentsArray(comment, array){
-        console.log("this is comment:", comment);
+        console.log("this is updated comments:", comment);
     this.setState( prevState => {
+        console.log("this is prevState[array]", prevState[array]);
         prevState[array].push(comment)
         return {
             [array]: prevState[array]
