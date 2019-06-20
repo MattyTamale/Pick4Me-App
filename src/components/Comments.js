@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
+// import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
 
 
 class Comments extends Component {
@@ -38,7 +39,9 @@ class Comments extends Component {
             {this.state.showForm ?
                 <form onSubmit={this.handleSubmit}>
                     <FormControl>
-                    <Input
+                    <TextField
+                        multiline
+                        rowsMax="4"
                         id='comment'
                         type="text"
                         onChange={this.handleChange}

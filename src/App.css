@@ -32,26 +32,42 @@
   }
 } */
 
+body {
+    font-family: 'Prompt', sans-serif;
+}
+
 header {
     text-align: center;
+    background: white;
+    border: 1px solid black;
+    padding: 1.5rem .5rem;
+    margin-bottom: 1.5rem;
+}
+
+.mainTitle {
+    font-size: 50px;
+    animation-name: rainbow;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    font-weight: 700;
 }
 
 .searchForm {
     text-align: center;
+
 }
 
 .initialForm {
     margin-bottom: 2em;
 }
 
-.locationInput {
-
+.searchResults {
+    text-align: center;
+    margin: 1rem 1rem;
 }
 
-.priceInput {
-}
-
-.formSubmit {
+.formButton {
+    text-align: center;
 }
 
 .favorite {
@@ -70,8 +86,62 @@ a:hover {
 
 .name {
     border: 1px solid grey;
+    box-shadow: 3px 3px #888888;
     border-radius: 10px;
     text-align: center;
-    margin: 1rem 2rem;
+    margin: 1vw 2vw;
     padding: .5rem 1rem;
+    animation-name: rainbow;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 5vw;
+    /* white-space: nowrap;
+    overflow: hidden; */
+}
+
+.name:hover {
+    background-color: lightblue;
+}
+
+.favoriteInfo {
+    margin-left: 2rem;
+}
+
+.favButtons {
+    align-items: center;
+    justify-content: space-around;
+}
+
+.deleteButton {
+    margin: 1rem;
+}
+
+.noteButton {
+    margin: 1rem;
+}
+
+.editButtons {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.editComment {
+    margin: 0 .5rem;
+}
+
+/* animations taken from class example for added text pop */
+@keyframes rainbow {
+  0% { color: black; }
+  10% { color: crimson; }
+  25% { color: hotpink;}
+  30% { color: coral;}
+  40% { color: lightyellow; }
+  50% { color: palegreen; }
+  60% { color: mediumaquamarine; }
+  75% { color: steelblue; }
+  80% { color: darkviolet;}
+  90% { color: black; }
+  100% { color: ghostwhite; }
 }

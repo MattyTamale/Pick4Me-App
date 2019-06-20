@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import UpdateForm from './UpdateForm.js';
 import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 class Comment extends Component {
@@ -21,8 +23,14 @@ class Comment extends Component {
         return (
             <div key={this.props.index}>
                 <h4>{this.props.comments[this.props.index].note}</h4>
-                <Button variant="outlined" color="secondary" onClick={()=> {this.props.handleCommentDelete(this.props.comments[this.props.index].id, this.props.comments)}}>Delete Note</Button>
-                <Button variant="outlined" color="primary" onClick={this.showEditForm}>Edit</Button>
+                <div className="editButtons">
+                    <div className="editComment">
+                    <Button variant="outlined" color="secondary" onClick={()=> {this.props.handleCommentDelete(this.props.comments[this.props.index].id, this.props.comments)}}>Delete <DeleteIcon /></Button>
+                    </div>
+                    <div className="editComment">
+                    <Button variant="outlined" color="primary" onClick={this.showEditForm}>Edit <Icon>edit_icon</Icon></Button>
+                    </div>
+                </div>
                 {this.state.showForm ?
                     <div>
                         <UpdateForm

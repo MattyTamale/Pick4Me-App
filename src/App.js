@@ -6,6 +6,9 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+// import CardActions from '@material-ui/core/CardActions';
+import Typography from '@material-ui/core/Typography';
 import './App.css';
 
 //Set the limit of results to 50 that way the results can be randomized and
@@ -131,7 +134,8 @@ class App extends Component {
     handleSubmit (event) {
       event.preventDefault()
       this.setState({
-        searchURL: this.state.baseURL + this.state.explore + this.state.location + this.state.radius + this.state.query + this.state.limit + this.state.price + this.state.client_id + this.state.client_secret + this.state.v
+        searchURL: this.state.baseURL + this.state.explore + this.state.location + this.state.radius + this.state.query + this.state.limit + this.state.price + this.state.client_id + this.state.client_secret + this.state.v,
+        submitted: false
       }, () => {
         console.log(this.state.searchURL)
         fetch(this.state.searchURL)
@@ -375,11 +379,12 @@ class App extends Component {
         return (
             <div>
                 <header>
-                    <h1>Pick-4-Me!</h1>
+                    <h1 className="mainTitle">Pick-4-Me!</h1>
                 </header>
                 <Container >
                 <div className="searchForm">
                 <Card onSubmit={this.handleSearch}>
+                    <CardContent>
                     <h3>Please Fill Out & Submit These Two Fields:</h3>
                     <form className="initialForm">
                         <FormControl className="locationInput">
@@ -403,32 +408,37 @@ class App extends Component {
                             placeholder='Price Point: 1, 2, 3, or 4'
                             value={this.state.cost}
                         />
+                        <br/>
+                        <br/>
                         </FormControl>
-                        <br/>
-                        <br/>
-                        <FormControl>
+                        <div className="formButton">
                         <Button type='submit' variant="outlined" color="inherit" className="formSubmit" onClick={this.infoSubmitted}>Submit Info</Button>
-                        </FormControl>
-                    </form>
-                    {this.state.submitted ?
-                        <div>
-                            <h4>This is the location you submitted: {this.state.currentCity}</h4>
-                            <h4>This is the price point you submitted: {this.state.dollar}</h4>
                         </div>
+                    </form>
+                    </CardContent>
+                    {this.state.submitted ?
+                        <CardContent>
+                            <Typography varaint="h5" component="h2" className="resultsTitle">This is the location you submitted:</Typography> <h3>{this.state.currentCity}</h3>
+                            <Typography varaint="h5" component="h2" className="resultsTitle">This is the price point you submitted:</Typography> <h3>{this.state.dollar}</h3>
+                        </CardContent>
                         : ''
                     }
                 </Card>
                 <br />
-                <Button onClick={this.handleSubmit} variant="contained" color="primary">Get Data</Button>
+                <Button onClick={this.handleSubmit} variant="contained" color="primary" size="medium">Get Data</Button>
                 </div>
                 </Container>
                 <div>
                     {this.state.results ?
-                        <div>
-                            <h2>Name of Restaurant: {this.state.venue.name}</h2>
-                            <h3>Style of Food: {this.state.venue.categories[0].name}</h3>
-                            <Button onClick={this.handleCreateFavorite}>Add to Favorites</Button>
-                        </div>
+                        <Card className="searchResults">
+                            <CardContent>
+                            <Typography varaint="h5" component="h2" className="resultsTitle">Name of Restaurant: </Typography>
+                            <h2>{this.state.venue.name}</h2>
+                            <Typography varaint="h5" component="h2">Style of Food:</Typography> <h3>{this.state.venue.categories[0].name}</h3>
+                            <Button variant="contained" color="primary" onClick={this.handleCreateFavorite} className="searchButton">Add to Favorites</Button>
+                            <br/>
+                            </CardContent>
+                        </Card>
                         : ''
                     }
                 </div>
@@ -444,7 +454,7 @@ class App extends Component {
                     />
                 </div>
                 <footer>
-                    <h5><a href="#">About</a></h5>
+                    <h5><a href="https://github.com/MattyTamale/Pick4Me-App/blob/master/README.md">About</a></h5>
                 </footer>
             </div>
         )

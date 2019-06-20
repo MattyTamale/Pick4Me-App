@@ -4,10 +4,8 @@ import Comment from './Comment.js';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
-import AddIcon from '@material-ui/icons/Add';
-import Icon from '@material-ui/core/Icon';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 
 class Favorites extends Component {
@@ -62,38 +60,49 @@ class Favorites extends Component {
                     {this.props.favorites ? this.props.favorites.map((restaurant, index) => {
                         return (
                             <Card key={index} className="favorite">
+                                <CardContent>
+                                <div className="favoriteInfo">
                                 <h2 onClick={this.showNote} className="name">{restaurant.name}</h2>
-                                <h3>Address:
-                                    <a href={`https://www.google.com/maps/place/+${restaurant.address},+ ${restaurant.city}`}>{restaurant.address} {restaurant.city}</a>
-                                </h3>
-                                <h4>Speciatly: {restaurant.shortname}</h4>
+                                <h3>Address:</h3>
+                                <h2><a href={`https://www.google.com/maps/place/+${restaurant.address},+ ${restaurant.city}`}>{restaurant.address} {restaurant.city}</a></h2>
+                                <h3>Speciatly: {restaurant.shortname}</h3>
+                                </div>
                                 {this.state.showComment ?
                                     <div>
                                         {this.props.comments[index] ?
-                                            <Comment
-                                                handleCommentDelete={this.props.handleCommentDelete}
-                                                handleUpdate={this.props.handleUpdate}
-                                                key={index}
-                                                index={index}
-                                                comments={this.props.comments}
-                                                favorites={this.props.favorites}
-                                            />
+                                            <Card>
+                                                <CardContent>
+                                                <Comment
+                                                    handleCommentDelete={this.props.handleCommentDelete}
+                                                    handleUpdate={this.props.handleUpdate}
+                                                    key={index}
+                                                    index={index}
+                                                    comments={this.props.comments}
+                                                    favorites={this.props.favorites}
+                                                />
+                                                </CardContent>
+                                            </Card>
                                             : ''
                                         }
                                     </div>
                                     : ''
                                 }
-                                <Button variant="contained" color="secondary" onClick={() => {this.props.handleFavoriteDelete(restaurant.id, index, this.props.favorites)}}>Delete
-                                </Button>
-                                <div>
-                                    <Comments
-                                        handleCreateComment={this.props.handleCreateComment}
-                                        restaurant={restaurant}
-                                        key={index}
-                                        index={index}
-                                        favorites={this.props.favorites}
-                                    />
+                                <div className="favButtons">
+                                    <div className="deleteButton">
+                                    <Button variant="contained" color="secondary" onClick={() => {this.props.handleFavoriteDelete(restaurant.id, index, this.props.favorites)}}>Delete
+                                    </Button>
+                                    </div>
+                                    <div className="noteButton">
+                                        <Comments
+                                            handleCreateComment={this.props.handleCreateComment}
+                                            restaurant={restaurant}
+                                            key={index}
+                                            index={index}
+                                            favorites={this.props.favorites}
+                                        />
+                                    </div>
                                 </div>
+                                </CardContent>
                             </Card>
                         )
                     })
