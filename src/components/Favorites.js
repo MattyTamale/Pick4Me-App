@@ -59,7 +59,9 @@ class Favorites extends Component {
             <Container>
                 <h1> My Current Favorites: </h1>
                 <div className="favContainer">
-                <button onClick={this.toggleFavs} className="toggleFavorites">Show/Hide</button>
+                <Button variant="contained" color="secondary" size="large" onClick={this.toggleFavs} className="toggleFavorites">Show/Hide</Button>
+                <br/>
+                <br/>
                 </div>
                 {this.state.showFaves ?
                     <div>
