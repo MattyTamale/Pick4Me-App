@@ -60,7 +60,9 @@ class Favorites extends Component {
                         return (
                             <Card key={index}>
                                 <h2 onClick={this.showNote}>{restaurant.name}</h2>
-                                <h3>Address: {restaurant.address} {restaurant.city}</h3>
+                                <h3>Address:
+                                    <a href={`https://www.google.com/maps/place/+${restaurant.address},+ ${restaurant.city}`}>{restaurant.address} {restaurant.city}</a>
+                                </h3>
                                 <h4>Speciatly: {restaurant.shortname}</h4>
                                 {this.state.showComment ?
                                     <div>

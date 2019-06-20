@@ -341,7 +341,9 @@ class App extends Component {
     render(){
         return (
             <div>
-                <h1>Pick-4-Me!</h1>
+                <header>
+                    <h1>Pick-4-Me!</h1>
+                </header>
                 <Container >
                 <div onSubmit={this.handleSearch}>
                     <h3>Please Fill Out & Submit These Two Fields:</h3>
