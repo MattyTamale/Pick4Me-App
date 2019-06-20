@@ -148,6 +148,7 @@ class App extends Component {
                 results: true,
                 venue: json.response.groups[0].items[Math.floor(json.response.groups[0].items.length * Math.random())].venue
             })
+            console.log("this is venue:", this.state.venue);
         }).catch(err => console.log(err))
       })
     }
@@ -433,8 +434,10 @@ class App extends Component {
                         <Card className="searchResults">
                             <CardContent>
                             <Typography varaint="h5" component="h2" className="resultsTitle">Name of Restaurant: </Typography>
-                            <h2>{this.state.venue.name}</h2>
+                            <h1 className="searchResult">{this.state.venue.name}</h1>
                             <Typography varaint="h5" component="h2">Style of Food:</Typography> <h3>{this.state.venue.categories[0].name}</h3>
+                            <Typography varaint="h5" component="h2">Location:</Typography>
+                            <h3><a href={`https://www.google.com/maps/place/+${this.state.venue.location.address},+ ${this.state.currentCity}`}>{this.state.venue.location.address}, {this.state.currentCity}</a></h3>
                             <Button variant="contained" color="primary" onClick={this.handleCreateFavorite} className="searchButton">Add to Favorites</Button>
                             <br/>
                             </CardContent>
@@ -442,7 +445,7 @@ class App extends Component {
                         : ''
                     }
                 </div>
-                <div>
+                <div className="favoriteComponent">
                     <Favorites
                         favorites={this.state.favorites}
                         handleFavoriteDelete={this.handleFavoriteDelete}
@@ -454,7 +457,7 @@ class App extends Component {
                     />
                 </div>
                 <footer>
-                    <h5><a href="https://github.com/MattyTamale/Pick4Me-App/blob/master/README.md">About</a></h5>
+                    <h5 href="https://github.com/MattyTamale/Pick4Me-App/blob/master/README.md">About</h5>
                 </footer>
             </div>
         )

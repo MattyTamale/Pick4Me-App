@@ -34,12 +34,16 @@
 
 body {
     font-family: 'Prompt', sans-serif;
+    background-image: url('https://californiasuiteshotel.com/wp-content/uploads/2008/08/645-front-street-1701-006_highres.jpg');
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
 }
 
 header {
     text-align: center;
-    background: white;
-    border: 1px solid black;
+    background: RGB(240, 248, 255, .3);
+    border: 1px black;
     padding: 1.5rem .5rem;
     margin-bottom: 1.5rem;
 }
@@ -54,8 +58,15 @@ header {
 
 .searchForm {
     text-align: center;
-
+    opacity: 0.9;
 }
+
+.favoriteComponent {
+    opacity: 0.85;
+    background-color: RGB(255, 255, 255, .55);
+    margin: 1rem .4rem;
+}
+
 
 .initialForm {
     margin-bottom: 2em;
@@ -74,14 +85,50 @@ header {
     margin: 1em 0;
 }
 
+h1 {
+    opacity: 1;
+}
+
 a {
     text-decoration: none;
     color: black;
+    font-size: 4vw;
+    padding: .2rem 1rem;
+    border: 1px solid grey;
+    border-radius: 3px;
+    background-color: ghostwhite
 }
 
 a:hover {
     text-decoration: none;
-    color: red;
+    color: mediumslateblue;
+    background-color: white;
+}
+
+.favContainer {
+    text-align: center;
+}
+
+.searchResult {
+    font-size: 50px;
+    margin: 0 auto;
+}
+
+.toggleFavorites {
+    border: 1px solid black;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: darkred;
+    color: white;
+    padding: .6rem;
+    margin-left: .5rem;
+    font-size: 25px;
+    margin-bottom: 1rem;
+}
+
+.toggleFavorites:hover {
+    background: crimson;
+    color: ghostwhite;
 }
 
 .name {
