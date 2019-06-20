@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Button from '@material-ui/core/Button';
 
 class Comments extends Component {
     constructor(){
@@ -11,7 +12,7 @@ class Comments extends Component {
     handleSubmit = (event) => {
          event.preventDefault();
          console.log("this is favorites:", this.props.favorites[this.props.index].id);
-         this.props.handleCreateComment(this.state.comment, this.props.favorites[this.props.index].id)
+         this.props.handleCreateComment(this.state.comment, this.props.favorites[this.props.index].id);
     }
 
     // handleUpdate = () => {
@@ -35,7 +36,7 @@ class Comments extends Component {
                         onChange={this.handleChange}
                         value={this.state.comment}
                     />
-                    <button type="submit">Submit</button>
+                    <Button type="submit">Submit</Button>
                 </form>
             </div>
         )

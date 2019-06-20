@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import Button from '@material-ui/core/Button';
 
 class UpdateForm extends Component {
     constructor(){
@@ -13,6 +13,7 @@ class UpdateForm extends Component {
          event.preventDefault();
          console.log("this is comments:", this.props.favorites[this.props.index]);
          this.props.handleUpdate(this.state.comment, this.props.comments, this.props.favorites[this.props.index], this.props.comments[this.props.index].id)
+
     }
 
     handleChange = (event) => {
@@ -31,6 +32,7 @@ class UpdateForm extends Component {
                         onChange={this.handleChange}
                         id='comment'
                     />
+                    <Button type="submit">Add Note</Button>
                 </form>
             </div>
         )

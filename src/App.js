@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import Favorites from './components/Favorites.js';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Container from '@material-ui/core/Container';
 // import './App.css';
 
 
@@ -315,33 +320,44 @@ class App extends Component {
         return (
             <div>
                 <h1>Pick-4-Me!</h1>
-                <button onClick={this.handleSubmit}>Get Data</button>
+                <Container >
                 <div onSubmit={this.handleSearch}>
+                    <h3>Please Fill Out & Submit These Two Fields:</h3>
                     <form >
-                        <label>Location: </label>
-                        <input
+                        <FormControl>
+                        <InputLabel>Location: </InputLabel>
+                        <Input
                             id='currentCity'
                             type='text'
                             onChange={this.handleChange}
                             placeholder='City, State'
                             value={this.state.currentCity}
                         />
-                        <input
+                        </FormControl>
+                        <br/>
+                        <br/>
+                        <FormControl>
+                        <InputLabel>How Expensive?</InputLabel>
+                        <Input
                             id='cost'
                             type='text'
                             onChange={this.handleChange}
                             placeholder='Price Point: 1, 2, 3, or 4'
                             value={this.state.cost}
                         />
-                        <button type='submit'>Submit</button>
+                        </FormControl>
+                        <br/>
+                        <Button type='submit'>Submit Info</Button>
                     </form>
                 </div>
+                <Button onClick={this.handleSubmit}>Get Data</Button>
+                </Container>
                 <div>
                     {this.state.results ?
                         <div>
                             <h2>Name of Restaurant: {this.state.venue.name}</h2>
                             <h3>Style of Food: {this.state.venue.categories[0].name}</h3>
-                            <button onClick={this.handleCreateFavorite}>Add to Favorites</button>
+                            <Button onClick={this.handleCreateFavorite}>Add to Favorites</Button>
                         </div>
                         : ''
                     }

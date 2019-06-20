@@ -1,12 +1,23 @@
 import React, { Component } from 'react';
 import Comments from './Comments.js';
-import UpdateForm from './UpdateForm.js';
+import Comment from './Comment.js';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
+import DeleteIcon from '@material-ui/icons/Delete';
 
+// const useStyles = makeStyles(theme => ({
+//   button: {
+//     margin: theme.spacing(1),
+//   },
+//   input: {
+//     display: 'none',
+//   },
+// }));
 
 
 class Favorites extends Component {
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state = {
             showForm: false,
             showComment: false,
@@ -25,6 +36,9 @@ class Favorites extends Component {
 
     showNote(event){
         console.log("this is comments:", this.props.comments);
+        this.setState({
+            showComment: !this.state.showComment
+        })
     }
 
     showEditForm(event){
@@ -36,37 +50,45 @@ class Favorites extends Component {
     render() {
         return (
             <div>
+                <h1> My Current Favorites: </h1>
+                <Container>
                 <div>
                     {this.props.favorites ? this.props.favorites.map((restaurant, index) => {
                         return (
                             <div key={index}>
-                                <h3 onClick={this.showNote}>{restaurant.name}</h3>
-                                {this.props.comments[index] ?
+                                <h2 onClick={this.showNote}>{restaurant.name}</h2>
+                                <h3>Address: {restaurant.address} {restaurant.city}</h3>
+                                <h4>Speciatly: {restaurant.shortname}</h4>
+                                {this.state.showComment ?
                                     <div>
-                                    <h4>{this.props.comments[index].note}</h4>
-                                    <button onClick={this.showEditForm}>Edit</button>
+                                        {this.props.comments[index] ?
+                                            <Comment
+                                                handleUpdate={this.props.handleUpdate}
+                                                key={index}
+                                                index={index}
+                                                comments={this.props.comments}
+                                                favorites={this.props.favorites}
+                                            />
+                                            : ''
+                                        }
                                     </div>
                                     : ''
                                 }
-                                {this.state.showEditForm ?
-                                    <UpdateForm
-                                        handleUpdate={this.props.handleUpdate}
-                                        index={index}
-                                        comments={this.props.comments}
-                                        favorites={this.props.favorites}
-                                    />
-                                    : ''
-                                }
-                                <button onClick={() => {this.props.handleFavoriteDelete(restaurant.id, index, this.props.favorites, this.props.comments[index].id, this.props.comments)}}>Delete</button>
-                                <button onClick={this.toggleForm}>Leave a Note</button>
+                                <Button variant="contained" color="secondary" onClick={() => {this.props.handleFavoriteDelete(restaurant.id, index, this.props.favorites, this.props.comments[index].id, this.props.comments)}}>Delete
+                                    <DeleteIcon className={classes.rightIcon} />
+                                </Button>
+                                
+                                <Button onClick={this.toggleForm}>Leave a Note</Button>
                                 {this.state.showForm ?
-                                    <Comments
-                                        handleCreateComment={this.props.handleCreateComment}
-                                        restaurant={restaurant}
-                                        key={index}
-                                        index={index}
-                                        favorites={this.props.favorites}
-                                    />
+                                    <div>
+                                        <Comments
+                                            handleCreateComment={this.props.handleCreateComment}
+                                            restaurant={restaurant}
+                                            key={index}
+                                            index={index}
+                                            favorites={this.props.favorites}
+                                        />
+                                    </div>
                                 : ''
                                 }
                             </div>
@@ -75,6 +97,7 @@ class Favorites extends Component {
                     : ''
                     }
                 </div>
+                </Container>
             </div>
         )
     }
