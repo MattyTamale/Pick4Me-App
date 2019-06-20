@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import Favorites from './components/Favorites.js';
-// import './App.css';
-
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Container from '@material-ui/core/Container';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+// import CardActions from '@material-ui/core/CardActions';
+import Typography from '@material-ui/core/Typography';
+import './App.css';
 
 //Set the limit of results to 50 that way the results can be randomized and
 //shown to the user using math.random() and show/hide methods
@@ -32,11 +40,15 @@ class App extends Component {
             results: false,
             venue: '',
             cost: '',
+            dollar: '',
             favorites: [],
             newFavorite: [],
-            comments: ''
+            comments: '',
+            submitted: false
         }
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.infoSubmitted = this.infoSubmitted.bind(this);
+        this.setPrice = this.setPrice.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleFavorites = this.handleFavorites.bind(this);
@@ -46,10 +58,12 @@ class App extends Component {
         this.handleCreateComment = this.handleCreateComment.bind(this);
         this.updateCommentsArray = this.updateCommentsArray.bind(this);
         this.updateFavoritesArray = this.updateFavoritesArray.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
+        this.handleFavoriteDelete = this.handleFavoriteDelete.bind(this);
+        this.handleCommentDelete = this.handleCommentDelete.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
         this.removeFromFavoritesArray = this.removeFromFavoritesArray.bind(this);
         this.removeFromCommentsArray = this.removeFromCommentsArray.bind(this);
+        this.removeFromComments = this.removeFromComments.bind(this);
         // this.handleCreate = this.handleCreate.bind(this);
     }
 
@@ -106,6 +120,8 @@ class App extends Component {
                 favorites: prevState.favorites
             }
         })
+        this.fetchFavorites();
+        this.fetchComments();
         console.log("this is favorites:", this.state.favorites);
     }
 
@@ -118,7 +134,8 @@ class App extends Component {
     handleSubmit (event) {
       event.preventDefault()
       this.setState({
-        searchURL: this.state.baseURL + this.state.explore + this.state.location + this.state.radius + this.state.query + this.state.limit + this.state.price + this.state.client_id + this.state.client_secret + this.state.v
+        searchURL: this.state.baseURL + this.state.explore + this.state.location + this.state.radius + this.state.query + this.state.limit + this.state.price + this.state.client_id + this.state.client_secret + this.state.v,
+        submitted: false
       }, () => {
         console.log(this.state.searchURL)
         fetch(this.state.searchURL)
@@ -131,8 +148,36 @@ class App extends Component {
                 results: true,
                 venue: json.response.groups[0].items[Math.floor(json.response.groups[0].items.length * Math.random())].venue
             })
+            console.log("this is venue:", this.state.venue);
         }).catch(err => console.log(err))
       })
+    }
+
+    setPrice(){
+        if(this.state.cost === '1'){
+            this.setState({
+                dollar: '$ Cheap'
+            })
+        }else if (this.state.cost === '2'){
+            this.setState({
+                dollar: '$$ Average'
+            })
+        }else if (this.state.cost === '3'){
+            this.setState({
+                dollar: '$$$ Pricey'
+            })
+        }else if (this.state.cost === '4'){
+            this.setState({
+                dollar: '$$$$ Fancy'
+            })
+        }
+    }
+
+    infoSubmitted(event){
+        this.setState({
+            submitted: true
+        })
+        this.setPrice();
     }
 
     //===============
@@ -190,10 +235,12 @@ class App extends Component {
             this.updateCommentsArray(jData, 'comments')
         }).catch( err => console.log(err));
         console.log("these are the comments:", this.state.comments);
+        this.fetchFavorites();
+        this.fetchComments();
     }
 
     updateCommentsArray(comment, array){
-        console.log("this is updated comments:", comment);
+        console.log("this is updated array:", [array]);
     this.setState( prevState => {
         console.log("this is prevState[array]", prevState[array]);
         prevState[array].push(comment)
@@ -207,7 +254,7 @@ class App extends Component {
     //UPDATE METHOD/LEAVE COMMENTS
     //============================
 
-    handleUpdate(comment, array, favoriteID, id){
+    handleUpdate(comment, array, index, id){
         let updateNote = {
             note: comment
         }
@@ -222,7 +269,7 @@ class App extends Component {
         .then( updatedFavorite => updatedFavorite.json())
         .then(jData => {
             console.log("this is jData", jData);
-            this.removeFromCommentsArray(array, favoriteID);
+            this.removeFromCommentsArray(array, index, updateNote);
             this.updateCommentsArray(jData, 'comments');
             })
         .catch(err => console.log('this is error from handleUpdate', err));
@@ -234,7 +281,7 @@ class App extends Component {
     //DELETE METHOD AND REMOVAL FROM FAVORITES ARRAY
     //==============================================
 
-    handleDelete(id, index, array){
+    handleFavoriteDelete(id, index, array){
         console.log('this is delete', id, index, array);
         fetch(`http://localhost:3000/favorites/${id}`, {
             method: 'DELETE'
@@ -243,6 +290,8 @@ class App extends Component {
             console.log("It's been deleted, trust me");
             this.removeFromFavoritesArray(array, index)
         }).catch( err => console.log('this is error from handleDelete:', err))
+        this.fetchComments();
+        this.fetchFavorites();
     }
 
     removeFromFavoritesArray(array, index){
@@ -253,9 +302,22 @@ class App extends Component {
                 [array]: prevState.favorites
                 }
             })
+            this.fetchFavorites();
         }
 
-    removeFromCommentsArray(array, index){
+    handleCommentDelete(id, array){
+        console.log('this is delete comment', id);
+        fetch(`http://localhost:3000/comments/${id}`, {
+            method: 'DELETE'
+        })
+        .then(data => {
+            console.log("It's been deleted, trust me");
+            this.removeFromComments(array, id)
+        }).catch( err => console.log('this is error from handleDelete:', err))
+        this.fetchFavorites();
+    }
+
+    removeFromComments(array, index){
         this.setState(prevState => {
             console.log("this is prevState:", prevState.comments);
             prevState.comments.splice(index, 1)
@@ -263,6 +325,19 @@ class App extends Component {
                 [array]: prevState.comments
                 }
             })
+            this.fetchComments();
+        }
+
+    removeFromCommentsArray(array, index, newEntry){
+        this.setState(prevState => {
+            console.log("this is prevState:", prevState.comments);
+            console.log("this is newEntry:", newEntry);
+            prevState.comments[index] = newEntry
+            return {
+                [array]: prevState.comments[index]
+                }
+            })
+            this.fetchComments();
         }
 
     //===============
@@ -286,6 +361,7 @@ class App extends Component {
             this.setState({
                 comments: jData
             })
+            console.log("this is jData in comment fetch:", jData);
         })
     }
 
@@ -298,51 +374,91 @@ class App extends Component {
         this.fetchComments()
     }
 
+
+
     render(){
         return (
             <div>
-                <h1>Pick-4-Me!</h1>
-                <button onClick={this.handleSubmit}>Get Data</button>
-                <div onSubmit={this.handleSearch}>
-                    <form >
-                        <label>Location: </label>
-                        <input
+                <header>
+                    <h1 className="mainTitle">Pick-4-Me!</h1>
+                </header>
+                <Container >
+                <div className="searchForm">
+                <Card onSubmit={this.handleSearch}>
+                    <CardContent>
+                    <h3>Please Fill Out & Submit These Two Fields:</h3>
+                    <form className="initialForm">
+                        <FormControl className="locationInput">
+                        <InputLabel>Location: </InputLabel>
+                        <Input
                             id='currentCity'
                             type='text'
                             onChange={this.handleChange}
                             placeholder='City, State'
                             value={this.state.currentCity}
                         />
-                        <input
+                        </FormControl>
+                        <br/>
+                        <br/>
+                        <FormControl className="priceInput">
+                        <InputLabel>How Expensive?</InputLabel>
+                        <Input
                             id='cost'
                             type='text'
                             onChange={this.handleChange}
                             placeholder='Price Point: 1, 2, 3, or 4'
                             value={this.state.cost}
                         />
-                        <button type='submit'>Submit</button>
+                        <br/>
+                        <br/>
+                        </FormControl>
+                        <div className="formButton">
+                        <Button type='submit' variant="outlined" color="inherit" className="formSubmit" onClick={this.infoSubmitted}>Submit Info</Button>
+                        </div>
                     </form>
+                    </CardContent>
+                    {this.state.submitted ?
+                        <CardContent>
+                            <Typography varaint="h5" component="h2" className="resultsTitle">This is the location you submitted:</Typography> <h3>{this.state.currentCity}</h3>
+                            <Typography varaint="h5" component="h2" className="resultsTitle">This is the price point you submitted:</Typography> <h3>{this.state.dollar}</h3>
+                        </CardContent>
+                        : ''
+                    }
+                </Card>
+                <br />
+                <Button onClick={this.handleSubmit} variant="contained" color="primary" size="medium">Get Data</Button>
                 </div>
+                </Container>
                 <div>
                     {this.state.results ?
-                        <div>
-                            <h2>Name of Restaurant: {this.state.venue.name}</h2>
-                            <h3>Style of Food: {this.state.venue.categories[0].name}</h3>
-                            <button onClick={this.handleCreateFavorite}>Add to Favorites</button>
-                        </div>
+                        <Card className="searchResults">
+                            <CardContent>
+                            <Typography varaint="h5" component="h2" className="resultsTitle">Name of Restaurant: </Typography>
+                            <h1 className="searchResult">{this.state.venue.name}</h1>
+                            <Typography varaint="h5" component="h2">Style of Food:</Typography> <h3>{this.state.venue.categories[0].name}</h3>
+                            <Typography varaint="h5" component="h2">Location:</Typography>
+                            <h3><a href={`https://www.google.com/maps/place/+${this.state.venue.location.address},+ ${this.state.currentCity}`}>{this.state.venue.location.address}, {this.state.currentCity}</a></h3>
+                            <Button variant="contained" color="primary" onClick={this.handleCreateFavorite} className="searchButton">Add to Favorites</Button>
+                            <br/>
+                            </CardContent>
+                        </Card>
                         : ''
                     }
                 </div>
-                <div>
+                <div className="favoriteComponent">
                     <Favorites
                         favorites={this.state.favorites}
-                        handleDelete={this.handleDelete}
+                        handleFavoriteDelete={this.handleFavoriteDelete}
+                        handleCommentDelete={this.handleCommentDelete}
                         handleCreateComment={this.handleCreateComment}
                         handleChange={this.handleChange}
                         comments={this.state.comments}
                         handleUpdate={this.handleUpdate}
                     />
                 </div>
+                <footer>
+                    <h5 href="https://github.com/MattyTamale/Pick4Me-App/blob/master/README.md">About</h5>
+                </footer>
             </div>
         )
     }

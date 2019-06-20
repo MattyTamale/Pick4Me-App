@@ -31,3 +31,164 @@
     transform: rotate(360deg);
   }
 } */
+
+body {
+    font-family: 'Prompt', sans-serif;
+    background-image: url('https://californiasuiteshotel.com/wp-content/uploads/2008/08/645-front-street-1701-006_highres.jpg');
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+header {
+    text-align: center;
+    background: RGB(240, 248, 255, .3);
+    border: 1px black;
+    padding: 1.5rem .5rem;
+    margin-bottom: 1.5rem;
+}
+
+.mainTitle {
+    font-size: 50px;
+    animation-name: rainbow;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    font-weight: 700;
+}
+
+.searchForm {
+    text-align: center;
+    opacity: 0.9;
+}
+
+.favoriteComponent {
+    opacity: 0.85;
+    background-color: RGB(255, 255, 255, .55);
+    margin: 1rem .4rem;
+}
+
+
+.initialForm {
+    margin-bottom: 2em;
+}
+
+.searchResults {
+    text-align: center;
+    margin: 1rem 1rem;
+}
+
+.formButton {
+    text-align: center;
+}
+
+.favorite {
+    margin: 1em 0;
+}
+
+h1 {
+    opacity: 1;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-size: 4vw;
+    padding: .2rem 1rem;
+    border: 1px solid grey;
+    border-radius: 3px;
+    background-color: ghostwhite
+}
+
+a:hover {
+    text-decoration: none;
+    color: mediumslateblue;
+    background-color: white;
+}
+
+.favContainer {
+    text-align: center;
+}
+
+.searchResult {
+    font-size: 50px;
+    margin: 0 auto;
+}
+
+.toggleFavorites {
+    border: 1px solid black;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: darkred;
+    color: white;
+    padding: .6rem;
+    margin-left: .5rem;
+    font-size: 25px;
+    margin-bottom: 1rem;
+}
+
+.toggleFavorites:hover {
+    background: crimson;
+    color: ghostwhite;
+}
+
+.name {
+    border: 1px solid grey;
+    box-shadow: 3px 3px #888888;
+    border-radius: 10px;
+    text-align: center;
+    margin: 1vw 2vw;
+    padding: .5rem 1rem;
+    animation-name: rainbow;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 5vw;
+    /* white-space: nowrap;
+    overflow: hidden; */
+}
+
+.name:hover {
+    background-color: lightblue;
+}
+
+.favoriteInfo {
+    margin-left: 2rem;
+}
+
+.favButtons {
+    align-items: center;
+    justify-content: space-around;
+}
+
+.deleteButton {
+    margin: 1rem;
+}
+
+.noteButton {
+    margin: 1rem;
+}
+
+.editButtons {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.editComment {
+    margin: 0 .5rem;
+}
+
+/* animations taken from class example for added text pop */
+@keyframes rainbow {
+  0% { color: black; }
+  10% { color: crimson; }
+  25% { color: hotpink;}
+  30% { color: coral;}
+  40% { color: lightyellow; }
+  50% { color: palegreen; }
+  60% { color: mediumaquamarine; }
+  75% { color: steelblue; }
+  80% { color: darkviolet;}
+  90% { color: black; }
+  100% { color: ghostwhite; }
+}
