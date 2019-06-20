@@ -31,3 +31,47 @@
     transform: rotate(360deg);
   }
 } */
+
+header {
+    text-align: center;
+}
+
+.searchForm {
+    text-align: center;
+}
+
+.initialForm {
+    margin-bottom: 2em;
+}
+
+.locationInput {
+
+}
+
+.priceInput {
+}
+
+.formSubmit {
+}
+
+.favorite {
+    margin: 1em 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+    color: red;
+}
+
+.name {
+    border: 1px solid grey;
+    border-radius: 10px;
+    text-align: center;
+    margin: 1rem 2rem;
+    padding: .5rem 1rem;
+}

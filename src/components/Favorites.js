@@ -5,6 +5,9 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
+import AddIcon from '@material-ui/icons/Add';
+import Icon from '@material-ui/core/Icon';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 class Favorites extends Component {
@@ -15,7 +18,7 @@ class Favorites extends Component {
             showComment: false,
             showEditForm: false
         }
-        this.toggleForm = this.toggleForm.bind(this);
+        // this.toggleForm = this.toggleForm.bind(this);
         this.showNote = this.showNote.bind(this);
         this.showEditForm = this.showEditForm.bind(this);
         this.showInfo = this.showInfo.bind(this);
@@ -26,11 +29,11 @@ class Favorites extends Component {
         console.log("this is what I might need to delete:", this.props.comments);
     }
 
-    toggleForm(event){
-        this.setState({
-            showForm: !this.state.showForm
-        })
-    }
+    // toggleForm(event){
+    //     this.setState({
+    //         showForm: !this.state.showForm
+    //     })
+    // }
 
     showNote(event){
         console.log("this is comments:", this.props.comments);
@@ -58,8 +61,8 @@ class Favorites extends Component {
                 <div>
                     {this.props.favorites ? this.props.favorites.map((restaurant, index) => {
                         return (
-                            <Card key={index}>
-                                <h2 onClick={this.showNote}>{restaurant.name}</h2>
+                            <Card key={index} className="favorite">
+                                <h2 onClick={this.showNote} className="name">{restaurant.name}</h2>
                                 <h3>Address:
                                     <a href={`https://www.google.com/maps/place/+${restaurant.address},+ ${restaurant.city}`}>{restaurant.address} {restaurant.city}</a>
                                 </h3>
@@ -82,19 +85,15 @@ class Favorites extends Component {
                                 }
                                 <Button variant="contained" color="secondary" onClick={() => {this.props.handleFavoriteDelete(restaurant.id, index, this.props.favorites)}}>Delete
                                 </Button>
-                                <Button variant="outlined" color="inherit" onClick={this.toggleForm}>Leave a Note</Button>
-                                {this.state.showForm ?
-                                    <div>
-                                        <Comments
-                                            handleCreateComment={this.props.handleCreateComment}
-                                            restaurant={restaurant}
-                                            key={index}
-                                            index={index}
-                                            favorites={this.props.favorites}
-                                        />
-                                    </div>
-                                : ''
-                                }
+                                <div>
+                                    <Comments
+                                        handleCreateComment={this.props.handleCreateComment}
+                                        restaurant={restaurant}
+                                        key={index}
+                                        index={index}
+                                        favorites={this.props.favorites}
+                                    />
+                                </div>
                             </Card>
                         )
                     })

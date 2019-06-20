@@ -5,8 +5,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Container from '@material-ui/core/Container';
-// import './App.css';
-
+import Card from '@material-ui/core/Card';
+import './App.css';
 
 //Set the limit of results to 50 that way the results can be randomized and
 //shown to the user using math.random() and show/hide methods
@@ -37,11 +37,15 @@ class App extends Component {
             results: false,
             venue: '',
             cost: '',
+            dollar: '',
             favorites: [],
             newFavorite: [],
-            comments: ''
+            comments: '',
+            submitted: false
         }
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.infoSubmitted = this.infoSubmitted.bind(this);
+        this.setPrice = this.setPrice.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleFavorites = this.handleFavorites.bind(this);
@@ -142,6 +146,33 @@ class App extends Component {
             })
         }).catch(err => console.log(err))
       })
+    }
+
+    setPrice(){
+        if(this.state.cost === '1'){
+            this.setState({
+                dollar: '$ Cheap'
+            })
+        }else if (this.state.cost === '2'){
+            this.setState({
+                dollar: '$$ Average'
+            })
+        }else if (this.state.cost === '3'){
+            this.setState({
+                dollar: '$$$ Pricey'
+            })
+        }else if (this.state.cost === '4'){
+            this.setState({
+                dollar: '$$$$ Fancy'
+            })
+        }
+    }
+
+    infoSubmitted(event){
+        this.setState({
+            submitted: true
+        })
+        this.setPrice();
     }
 
     //===============
@@ -338,6 +369,8 @@ class App extends Component {
         this.fetchComments()
     }
 
+
+
     render(){
         return (
             <div>
@@ -345,10 +378,11 @@ class App extends Component {
                     <h1>Pick-4-Me!</h1>
                 </header>
                 <Container >
-                <div onSubmit={this.handleSearch}>
+                <div className="searchForm">
+                <Card onSubmit={this.handleSearch}>
                     <h3>Please Fill Out & Submit These Two Fields:</h3>
-                    <form >
-                        <FormControl>
+                    <form className="initialForm">
+                        <FormControl className="locationInput">
                         <InputLabel>Location: </InputLabel>
                         <Input
                             id='currentCity'
@@ -360,7 +394,7 @@ class App extends Component {
                         </FormControl>
                         <br/>
                         <br/>
-                        <FormControl>
+                        <FormControl className="priceInput">
                         <InputLabel>How Expensive?</InputLabel>
                         <Input
                             id='cost'
@@ -371,10 +405,22 @@ class App extends Component {
                         />
                         </FormControl>
                         <br/>
-                        <Button type='submit'>Submit Info</Button>
+                        <br/>
+                        <FormControl>
+                        <Button type='submit' variant="outlined" color="inherit" className="formSubmit" onClick={this.infoSubmitted}>Submit Info</Button>
+                        </FormControl>
                     </form>
+                    {this.state.submitted ?
+                        <div>
+                            <h4>This is the location you submitted: {this.state.currentCity}</h4>
+                            <h4>This is the price point you submitted: {this.state.dollar}</h4>
+                        </div>
+                        : ''
+                    }
+                </Card>
+                <br />
+                <Button onClick={this.handleSubmit} variant="contained" color="primary">Get Data</Button>
                 </div>
-                <Button onClick={this.handleSubmit}>Get Data</Button>
                 </Container>
                 <div>
                     {this.state.results ?
@@ -397,6 +443,9 @@ class App extends Component {
                         handleUpdate={this.handleUpdate}
                     />
                 </div>
+                <footer>
+                    <h5><a href="#">About</a></h5>
+                </footer>
             </div>
         )
     }
