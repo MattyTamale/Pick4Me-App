@@ -21,7 +21,8 @@ class Comment extends Component {
         return (
             <div key={this.props.index}>
                 <h4>{this.props.comments[this.props.index].note}</h4>
-                <Button onClick={this.showEditForm}>Edit</Button>
+                <Button variant="outlined" color="secondary" onClick={()=> {this.props.handleCommentDelete(this.props.comments[this.props.index].id, this.props.comments)}}>Delete Note</Button>
+                <Button variant="outlined" color="primary" onClick={this.showEditForm}>Edit</Button>
                 {this.state.showForm ?
                     <div>
                         <UpdateForm

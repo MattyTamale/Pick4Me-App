@@ -3,16 +3,8 @@ import Comments from './Comments.js';
 import Comment from './Comment.js';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import DeleteIcon from '@material-ui/icons/Delete';
-
-// const useStyles = makeStyles(theme => ({
-//   button: {
-//     margin: theme.spacing(1),
-//   },
-//   input: {
-//     display: 'none',
-//   },
-// }));
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
 
 
 class Favorites extends Component {
@@ -26,6 +18,12 @@ class Favorites extends Component {
         this.toggleForm = this.toggleForm.bind(this);
         this.showNote = this.showNote.bind(this);
         this.showEditForm = this.showEditForm.bind(this);
+        this.showInfo = this.showInfo.bind(this);
+    }
+
+    showInfo(event){
+        console.log("this is the data I want to delete:", this.props.favorites);
+        console.log("this is what I might need to delete:", this.props.comments);
     }
 
     toggleForm(event){
@@ -49,13 +47,18 @@ class Favorites extends Component {
 
     render() {
         return (
-            <div>
+            <Grid
+              container
+              direction="column"
+              justify="space-between"
+              alignItems="center"
+            >
+            <Container>
                 <h1> My Current Favorites: </h1>
-                <Container>
                 <div>
                     {this.props.favorites ? this.props.favorites.map((restaurant, index) => {
                         return (
-                            <div key={index}>
+                            <Card key={index}>
                                 <h2 onClick={this.showNote}>{restaurant.name}</h2>
                                 <h3>Address: {restaurant.address} {restaurant.city}</h3>
                                 <h4>Speciatly: {restaurant.shortname}</h4>
@@ -63,6 +66,7 @@ class Favorites extends Component {
                                     <div>
                                         {this.props.comments[index] ?
                                             <Comment
+                                                handleCommentDelete={this.props.handleCommentDelete}
                                                 handleUpdate={this.props.handleUpdate}
                                                 key={index}
                                                 index={index}
@@ -74,11 +78,9 @@ class Favorites extends Component {
                                     </div>
                                     : ''
                                 }
-                                <Button variant="contained" color="secondary" onClick={() => {this.props.handleFavoriteDelete(restaurant.id, index, this.props.favorites, this.props.comments[index].id, this.props.comments)}}>Delete
-                                    <DeleteIcon className={classes.rightIcon} />
+                                <Button variant="contained" color="secondary" onClick={() => {this.props.handleFavoriteDelete(restaurant.id, index, this.props.favorites)}}>Delete
                                 </Button>
-                                
-                                <Button onClick={this.toggleForm}>Leave a Note</Button>
+                                <Button variant="outlined" color="inherit" onClick={this.toggleForm}>Leave a Note</Button>
                                 {this.state.showForm ?
                                     <div>
                                         <Comments
@@ -91,17 +93,19 @@ class Favorites extends Component {
                                     </div>
                                 : ''
                                 }
-                            </div>
+                            </Card>
                         )
                     })
                     : ''
                     }
                 </div>
-                </Container>
-            </div>
+            </Container>
+            </Grid>
         )
     }
 }
+
+//this.props.comments[index].id, this.props.comments
 
 // <h4>{this.props.comments[index].note}</h4>
 

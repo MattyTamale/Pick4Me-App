@@ -56,6 +56,7 @@ class App extends Component {
         this.handleUpdate = this.handleUpdate.bind(this);
         this.removeFromFavoritesArray = this.removeFromFavoritesArray.bind(this);
         this.removeFromCommentsArray = this.removeFromCommentsArray.bind(this);
+        this.removeFromComments = this.removeFromComments.bind(this);
         // this.handleCreate = this.handleCreate.bind(this);
     }
 
@@ -112,6 +113,8 @@ class App extends Component {
                 favorites: prevState.favorites
             }
         })
+        this.fetchFavorites();
+        this.fetchComments();
         console.log("this is favorites:", this.state.favorites);
     }
 
@@ -196,6 +199,8 @@ class App extends Component {
             this.updateCommentsArray(jData, 'comments')
         }).catch( err => console.log(err));
         console.log("these are the comments:", this.state.comments);
+        this.fetchFavorites();
+        this.fetchComments();
     }
 
     updateCommentsArray(comment, array){
@@ -213,7 +218,7 @@ class App extends Component {
     //UPDATE METHOD/LEAVE COMMENTS
     //============================
 
-    handleUpdate(comment, array, favoriteID, id){
+    handleUpdate(comment, array, index, id){
         let updateNote = {
             note: comment
         }
@@ -228,7 +233,7 @@ class App extends Component {
         .then( updatedFavorite => updatedFavorite.json())
         .then(jData => {
             console.log("this is jData", jData);
-            this.removeFromCommentsArray(array, favoriteID);
+            this.removeFromCommentsArray(array, index, updateNote);
             this.updateCommentsArray(jData, 'comments');
             })
         .catch(err => console.log('this is error from handleUpdate', err));
@@ -240,7 +245,7 @@ class App extends Component {
     //DELETE METHOD AND REMOVAL FROM FAVORITES ARRAY
     //==============================================
 
-    handleFavoriteDelete(id, index, array, commentsID, commentsArray){
+    handleFavoriteDelete(id, index, array){
         console.log('this is delete', id, index, array);
         fetch(`http://localhost:3000/favorites/${id}`, {
             method: 'DELETE'
@@ -249,7 +254,8 @@ class App extends Component {
             console.log("It's been deleted, trust me");
             this.removeFromFavoritesArray(array, index)
         }).catch( err => console.log('this is error from handleDelete:', err))
-        this.handleCommentDelete(commentsID, commentsArray);
+        this.fetchComments();
+        this.fetchFavorites();
     }
 
     removeFromFavoritesArray(array, index){
@@ -260,6 +266,7 @@ class App extends Component {
                 [array]: prevState.favorites
                 }
             })
+            this.fetchFavorites();
         }
 
     handleCommentDelete(id, array){
@@ -269,11 +276,12 @@ class App extends Component {
         })
         .then(data => {
             console.log("It's been deleted, trust me");
-            this.removeFromCommentsArray(array, id)
+            this.removeFromComments(array, id)
         }).catch( err => console.log('this is error from handleDelete:', err))
+        this.fetchFavorites();
     }
 
-    removeFromCommentsArray(array, index){
+    removeFromComments(array, index){
         this.setState(prevState => {
             console.log("this is prevState:", prevState.comments);
             prevState.comments.splice(index, 1)
@@ -281,6 +289,19 @@ class App extends Component {
                 [array]: prevState.comments
                 }
             })
+            this.fetchComments();
+        }
+
+    removeFromCommentsArray(array, index, newEntry){
+        this.setState(prevState => {
+            console.log("this is prevState:", prevState.comments);
+            console.log("this is newEntry:", newEntry);
+            prevState.comments[index] = newEntry
+            return {
+                [array]: prevState.comments[index]
+                }
+            })
+            this.fetchComments();
         }
 
     //===============
@@ -304,6 +325,7 @@ class App extends Component {
             this.setState({
                 comments: jData
             })
+            console.log("this is jData in comment fetch:", jData);
         })
     }
 
@@ -366,6 +388,7 @@ class App extends Component {
                     <Favorites
                         favorites={this.state.favorites}
                         handleFavoriteDelete={this.handleFavoriteDelete}
+                        handleCommentDelete={this.handleCommentDelete}
                         handleCreateComment={this.handleCreateComment}
                         handleChange={this.handleChange}
                         comments={this.state.comments}
