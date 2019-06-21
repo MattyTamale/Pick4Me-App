@@ -72,7 +72,7 @@ class Favorites extends Component {
                                     <div className="favoriteInfo">
                                     <h2 onClick={this.showNote} className="name">{restaurant.name}</h2>
                                     <h3>Address:</h3>
-                                    <h2><a href={`https://www.google.com/maps/place/+${restaurant.address},+ ${restaurant.city}`}>{restaurant.address} {restaurant.city}</a></h2>
+                                    <h2><a className="locationLink" href={`https://www.google.com/maps/place/+${restaurant.address},+ ${restaurant.city}`}>{restaurant.address} {restaurant.city}</a></h2>
                                     <h3>Speciatly: {restaurant.shortname}</h3>
                                     </div>
                                     {this.state.showComment ?

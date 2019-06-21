@@ -89,7 +89,7 @@ h1 {
     opacity: 1;
 }
 
-a {
+.locationLink {
     text-decoration: none;
     color: black;
     font-size: 4vw;
@@ -99,10 +99,32 @@ a {
     background-color: ghostwhite
 }
 
-a:hover {
+.locationLink:hover {
     text-decoration: none;
     color: mediumslateblue;
     background-color: white;
+}
+
+footer {
+    background-color: white;
+    text-align: center;
+    margin-top: .5rem 0;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.footerInfo {
+    text-decoration: none;
+    color: black;
+    border: 1px solid grey;
+    border-radius: 2px;
+    margin: 0 .5rem;
+    padding: .3rem .5rem;
+}
+
+.footerInfo:hover {
+    color: white;
+    background-color: black;
 }
 
 .favContainer {
@@ -149,7 +171,7 @@ a:hover {
 }
 
 .name:hover {
-    background-color: lightblue;
+    background-color: aliceblue;
 }
 
 .favoriteInfo {
