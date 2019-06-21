@@ -18,6 +18,9 @@ class Comments extends Component {
          event.preventDefault();
          console.log("this is favorites:", this.props.favorites[this.props.index].id);
          this.props.handleCreateComment(this.state.comment, this.props.favorites[this.props.index].id);
+         this.setState({
+             showForm: false
+         })
     }
 
     toggleForm = (event) => {

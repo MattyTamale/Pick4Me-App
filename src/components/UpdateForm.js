@@ -7,7 +7,8 @@ class UpdateForm extends Component {
     constructor(){
         super()
         this.state = {
-            comment: ''
+            comment: '',
+            showForm: false
         }
     }
 
@@ -15,6 +16,7 @@ class UpdateForm extends Component {
          event.preventDefault();
          console.log("this is comments:", this.props.favorites[this.props.index]);
          this.props.handleUpdate(this.state.comment, this.props.comments, this.props.comments[this.props.index], this.props.comments[this.props.index].id)
+         // this.toggleForm();
 
     }
 
@@ -23,6 +25,12 @@ class UpdateForm extends Component {
          [event.target.id]: event.target.value
        })
     }
+
+    // toggleForm = (event) => {
+    //     this.setState({
+    //         showForm: !this.state.showForm
+    //     })
+    // }
 
     render(){
         return(

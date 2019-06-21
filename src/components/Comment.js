@@ -22,7 +22,7 @@ class Comment extends Component {
     render(){
         return (
             <div key={this.props.index}>
-                <h4>{this.props.comments[this.props.index].note}</h4>
+                <h2>{this.props.comments[this.props.index].note}</h2>
                 <div className="editButtons">
                     <div className="editComment">
                     <Button variant="outlined" color="secondary" onClick={()=> {this.props.handleCommentDelete(this.props.comments[this.props.index].id, this.props.comments)}}>Delete <DeleteIcon /></Button>
