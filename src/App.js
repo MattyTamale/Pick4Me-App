@@ -44,7 +44,9 @@ class App extends Component {
             favorites: [],
             newFavorite: [],
             comments: '',
-            submitted: false
+            submitted: false,
+            note: '',
+            favorite_id: ''
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.infoSubmitted = this.infoSubmitted.bind(this);
@@ -184,6 +186,11 @@ class App extends Component {
     //HEROKU CREATE METHODS
     //======================
 
+    //Possible to run the create comment within the create favorites?
+
+
+    //Needed to create a comment: FavoriteID and note
+
     handleCreateFavorite() {
         let favorite = {
            name: this.state.venue.name,
@@ -205,7 +212,10 @@ class App extends Component {
             console.log("this is favorite:", favorite);
             this.updateFavoritesArray(jData, 'favorites')
         }).catch( err => console.log(err));
-    }
+        let newNote = this.state.note
+        let favoriteId = favorite.id
+        this.handleCreateComment(newNote, favoriteId);
+        }
 
     updateFavoritesArray(favorite, array){
         console.log("this is favorites:", favorite);
@@ -466,6 +476,7 @@ class App extends Component {
             this.setState({
                 favorites: jData
             })
+            console.log(this.state.favorites);
         })
     }
 
