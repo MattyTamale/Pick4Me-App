@@ -17,7 +17,7 @@ class Comments extends Component {
     handleSubmit = (event) => {
          event.preventDefault();
          console.log("this is favorites:", this.props.favorites[this.props.index].id);
-         this.props.handleCreateComment(this.state.comment, this.props.favorites[this.props.index].id);
+         this.props.handleUpdate(this.state.comment, this.props.comments, this.props.comments[this.props.index], this.props.comments[this.props.index].id);
          this.setState({
              showForm: false
          })

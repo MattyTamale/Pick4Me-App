@@ -25,7 +25,7 @@ class Comment extends Component {
                 <h2>{this.props.comments[this.props.index].note}</h2>
                 <div className="editButtons">
                     <div className="editComment">
-                    <Button variant="outlined" color="secondary" onClick={()=> {this.props.handleCommentDelete(this.props.comments[this.props.index].id, this.props.comments)}}>Delete <DeleteIcon /></Button>
+                    <Button variant="outlined" color="secondary" onClick={()=> {this.props.handleCommentDelete(this.props.comments[this.props.index].favorite_id, this.props.comments)}}>Delete <DeleteIcon /></Button>
                     </div>
                     <div className="editComment">
                     <Button variant="outlined" color="primary" onClick={this.showEditForm}>Edit <Icon>edit_icon</Icon></Button>

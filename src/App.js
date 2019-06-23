@@ -279,9 +279,6 @@ class App extends Component {
             this.updateFavoritesArray(jData, 'favorites')
             this.handleCreateComment(newNote, favoriteId);
         }).catch( err => console.log(err));
-        // let newNote = this.state.note
-        // console.log(this.state.favorites);
-        // this.handleCreateComment(newNote, favoriteId);
     }
 
     updateFavoritesArray(favorite, array){
@@ -316,13 +313,18 @@ class App extends Component {
         this.fetchComments();
     }
 
-    updateCommentsArray(comment, array){
+    updateCommentsArray(comment, array, index){
         console.log("this is updated array:", [array]);
     this.setState( prevState => {
         console.log("this is prevState[array]", prevState[array]);
-        prevState[array].push(comment)
+        // prevState[array].push(comment)
+        // return {
+        //     [array]: prevState[array]
+        //     }
+        // })
+        prevState.comments[index] = comment
         return {
-            [array]: prevState[array]
+            [array]: prevState.comments[index]
             }
         })
     }
@@ -374,7 +376,7 @@ class App extends Component {
         .then(jData => {
             console.log("this is jData", jData);
             this.removeFromCommentsArray(array, index, updateNote);
-            this.updateCommentsArray(jData, 'comments');
+            this.updateCommentsArray(jData, 'comments', index);
             })
         .catch(err => console.log('this is error from handleUpdate', err));
     }
@@ -412,14 +414,15 @@ class App extends Component {
     //DELETE METHOD AND REMOVAL FROM FAVORITES ARRAY
     //==============================================
 
-    handleFavoriteDelete(id, index, array){
+    handleFavoriteDelete(id, index, array, favoriteID, comments){
         console.log('this is delete', id, index, array);
         fetch(`http://localhost:3000/favorites/${id}`, {
             method: 'DELETE'
         })
         .then(data => {
             console.log("It's been deleted, trust me");
-            this.removeFromFavoritesArray(array, index)
+            this.removeFromFavoritesArray(array, index);
+            this.handleCommentDelete(favoriteID, comments);
         }).catch( err => console.log('this is error from handleDelete:', err))
         this.fetchComments();
         this.fetchFavorites();

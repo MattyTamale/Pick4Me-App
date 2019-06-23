@@ -37,6 +37,8 @@ class Favorites extends Component {
 
     showNote(event){
         console.log("this is comments:", this.props.comments);
+        console.log("this is the data I want to delete:", this.props.favorites);
+        console.log("this is what I might need to delete:", this.props.comments);
         this.setState({
             showComment: !this.state.showComment
         })
@@ -97,16 +99,18 @@ class Favorites extends Component {
                                     }
                                     <div className="favButtons">
                                         <div className="deleteButton">
-                                        <Button variant="contained" color="secondary" onClick={() => {this.props.handleFavoriteDelete(restaurant.id, index, this.props.favorites)}}>Delete
+                                        <Button variant="contained" color="secondary" onClick={() => {this.props.handleFavoriteDelete(restaurant.id, index, this.props.favorites, this.props.comments[index].id, this.props.comments)}}>Delete
                                         </Button>
                                         </div>
                                         <div className="noteButton">
                                             <Comments
                                                 handleCreateComment={this.props.handleCreateComment}
+                                                handleUpdate={this.props.habdleUpdate}
                                                 restaurant={restaurant}
                                                 key={index}
                                                 index={index}
                                                 favorites={this.props.favorites}
+                                                comments={this.props.comments}
                                             />
                                         </div>
                                     </div>
