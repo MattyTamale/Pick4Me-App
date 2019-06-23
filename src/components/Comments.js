@@ -5,6 +5,12 @@ import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
 
+//======================================================
+//REMOVING THIS COMPONENT AS IT ONLY CREATES BUGS
+//BUT WILL LEAVE HERE FOR FUTURE UPDATES
+//======================================================
+
+
 class Comments extends Component {
     constructor(){
         super()
