@@ -5,6 +5,12 @@ import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
 
+//======================================================
+//REMOVING THIS COMPONENT AS IT ONLY CREATES BUGS
+//BUT WILL LEAVE HERE FOR FUTURE UPDATES
+//======================================================
+
+
 class Comments extends Component {
     constructor(){
         super()
@@ -17,7 +23,7 @@ class Comments extends Component {
     handleSubmit = (event) => {
          event.preventDefault();
          console.log("this is favorites:", this.props.favorites[this.props.index].id);
-         this.props.handleCreateComment(this.state.comment, this.props.favorites[this.props.index].id);
+         this.props.handleUpdate(this.state.comment, this.props.comments, this.props.comments[this.props.index], this.props.comments[this.props.index].id);
          this.setState({
              showForm: false
          })
