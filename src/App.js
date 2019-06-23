@@ -191,70 +191,6 @@ class App extends Component {
 
     //Needed to create a comment: FavoriteID and note
 
-    handleCreateFavorite() {
-        let favorite = {
-           name: this.state.venue.name,
-           shortname: this.state.venue.categories[0].shortName,
-           address: this.state.venue.location.address,
-           city: this.state.currentCity
-           }
-        fetch('https://pick4me-api.herokuapp.com/favorites', {
-        body: JSON.stringify(favorite),
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        }
-        }).then( createdFavorites => {
-            return createdFavorites.json()
-        }).then( jData => {
-            console.log("this is jData:", jData);
-            console.log("this is favorite:", favorite);
-            this.updateFavoritesArray(jData, 'favorites')
-        }).catch( err => console.log(err));
-        let newNote = this.state.note
-        let favoriteId = favorite.id
-        this.handleCreateComment(newNote, favoriteId);
-        }
-
-    updateFavoritesArray(favorite, array){
-        console.log("this is favorites:", favorite);
-    this.setState( prevState => {
-        prevState[array].push(favorite)
-        return {
-            [array]: prevState[array]
-            }
-        })
-    }
-
-
-    handleCreateComment(comment, favoriteID) {
-        let newComment = {
-            note: comment,
-            favorite_id: favoriteID
-        }
-        fetch('https://pick4me-api.herokuapp.com/comments', {
-        body: JSON.stringify(newComment),
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        }
-    }).then( createdComments => {
-            return createdComments.json()
-        }).then( jData => {
-            this.updateCommentsArray(jData, 'comments')
-        }).catch( err => console.log(err));
-        console.log("these are the comments:", this.state.comments);
-        this.fetchFavorites();
-        this.fetchComments();
-    }
-
-
-    //===============
-    //CREATE METHOD
-    //==============
-
     // handleCreateFavorite() {
     //     let favorite = {
     //        name: this.state.venue.name,
@@ -262,7 +198,7 @@ class App extends Component {
     //        address: this.state.venue.location.address,
     //        city: this.state.currentCity
     //        }
-    //     fetch('http://localhost:3000/favorites', {
+    //     fetch('https://pick4me-api.herokuapp.com/favorites', {
     //     body: JSON.stringify(favorite),
     //     method: 'POST',
     //     headers: {
@@ -276,7 +212,10 @@ class App extends Component {
     //         console.log("this is favorite:", favorite);
     //         this.updateFavoritesArray(jData, 'favorites')
     //     }).catch( err => console.log(err));
-    // }
+    //     let newNote = this.state.note
+    //     let favoriteId = favorite.id
+    //     this.handleCreateComment(newNote, favoriteId);
+    //     }
 
     updateFavoritesArray(favorite, array){
         console.log("this is favorites:", favorite);
@@ -288,12 +227,13 @@ class App extends Component {
         })
     }
 
+
     // handleCreateComment(comment, favoriteID) {
     //     let newComment = {
     //         note: comment,
     //         favorite_id: favoriteID
     //     }
-    //     fetch('http://localhost:3000/comments', {
+    //     fetch('https://pick4me-api.herokuapp.com/comments', {
     //     body: JSON.stringify(newComment),
     //     method: 'POST',
     //     headers: {
@@ -309,6 +249,72 @@ class App extends Component {
     //     this.fetchFavorites();
     //     this.fetchComments();
     // }
+
+
+    //===============
+    //CREATE METHOD
+    //==============
+
+    handleCreateFavorite() {
+        let favorite = {
+           name: this.state.venue.name,
+           shortname: this.state.venue.categories[0].shortName,
+           address: this.state.venue.location.address,
+           city: this.state.currentCity
+           }
+        fetch('http://localhost:3000/favorites', {
+        body: JSON.stringify(favorite),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        }
+        }).then( createdFavorites => {
+            return createdFavorites.json()
+        }).then( jData => {
+            console.log("this is jData:", jData);
+            console.log("this is favorite:", favorite);
+            let favoriteId = jData.id
+            let newNote = this.state.note
+            this.updateFavoritesArray(jData, 'favorites')
+            this.handleCreateComment(newNote, favoriteId);
+        }).catch( err => console.log(err));
+        // let newNote = this.state.note
+        // console.log(this.state.favorites);
+        // this.handleCreateComment(newNote, favoriteId);
+    }
+
+    updateFavoritesArray(favorite, array){
+        console.log("this is favorites:", favorite);
+    this.setState( prevState => {
+        prevState[array].push(favorite)
+        return {
+            [array]: prevState[array]
+            }
+        })
+    }
+
+    handleCreateComment(comment, favoriteID) {
+        let newComment = {
+            note: comment,
+            favorite_id: favoriteID
+        }
+        fetch('http://localhost:3000/comments', {
+        body: JSON.stringify(newComment),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        }
+    }).then( createdComments => {
+            return createdComments.json()
+        }).then( jData => {
+            this.updateCommentsArray(jData, 'comments')
+        }).catch( err => console.log(err));
+        console.log("these are the comments:", this.state.comments);
+        this.fetchFavorites();
+        this.fetchComments();
+    }
 
     updateCommentsArray(comment, array){
         console.log("this is updated array:", [array]);
@@ -326,37 +332,11 @@ class App extends Component {
     //HEROKU UPDATE METHOD/COMMENT
     //=============================
 
-    handleUpdate(comment, array, index, id){
-        let updateNote = {
-            note: comment
-        }
-        fetch(`https://pick4me-api.herokuapp.com/comments/${id}`, {
-            body: JSON.stringify(updateNote),
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then( updatedFavorite => updatedFavorite.json())
-        .then(jData => {
-            console.log("this is jData", jData);
-            this.removeFromCommentsArray(array, index, updateNote);
-            this.updateCommentsArray(jData, 'comments');
-            })
-        .catch(err => console.log('this is error from handleUpdate', err));
-    }
-
-
-    //============================
-    //UPDATE METHOD/LEAVE COMMENTS
-    //============================
-
     // handleUpdate(comment, array, index, id){
     //     let updateNote = {
     //         note: comment
     //     }
-    //     fetch(`http://localhost:3000/comments/${id}`, {
+    //     fetch(`https://pick4me-api.herokuapp.com/comments/${id}`, {
     //         body: JSON.stringify(updateNote),
     //         method: 'PUT',
     //         headers: {
@@ -373,42 +353,39 @@ class App extends Component {
     //     .catch(err => console.log('this is error from handleUpdate', err));
     // }
 
+
+    //============================
+    //UPDATE METHOD/LEAVE COMMENTS
+    //============================
+
+    handleUpdate(comment, array, index, id){
+        let updateNote = {
+            note: comment
+        }
+        fetch(`http://localhost:3000/comments/${id}`, {
+            body: JSON.stringify(updateNote),
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then( updatedFavorite => updatedFavorite.json())
+        .then(jData => {
+            console.log("this is jData", jData);
+            this.removeFromCommentsArray(array, index, updateNote);
+            this.updateCommentsArray(jData, 'comments');
+            })
+        .catch(err => console.log('this is error from handleUpdate', err));
+    }
+
     //===========================================
     //HEROKU DELETE METHOD & REMOVAL FROM ARRAY
     //===========================================
 
-    handleFavoriteDelete(id, index, array){
-        console.log('this is delete', id, index, array);
-        fetch(`https://pick4me-api.herokuapp.com/favorites/${id}`, {
-            method: 'DELETE'
-        })
-        .then(data => {
-            console.log("It's been deleted, trust me");
-            this.removeFromFavoritesArray(array, index)
-        }).catch( err => console.log('this is error from handleDelete:', err))
-        this.fetchComments();
-        this.fetchFavorites();
-    }
-
-    handleCommentDelete(id, array){
-        console.log('this is delete comment', id);
-        fetch(`https://pick4me-api.herokuapp.com/comments/${id}`, {
-            method: 'DELETE'
-        })
-        .then(data => {
-            console.log("It's been deleted, trust me");
-            this.removeFromComments(array, id)
-        }).catch( err => console.log('this is error from handleDelete:', err))
-        this.fetchFavorites();
-    }
-
-    //==============================================
-    //DELETE METHOD AND REMOVAL FROM FAVORITES ARRAY
-    //==============================================
-
     // handleFavoriteDelete(id, index, array){
     //     console.log('this is delete', id, index, array);
-    //     fetch(`http://localhost:3000/favorites/${id}`, {
+    //     fetch(`https://pick4me-api.herokuapp.com/favorites/${id}`, {
     //         method: 'DELETE'
     //     })
     //     .then(data => {
@@ -418,6 +395,35 @@ class App extends Component {
     //     this.fetchComments();
     //     this.fetchFavorites();
     // }
+    //
+    // handleCommentDelete(id, array){
+    //     console.log('this is delete comment', id);
+    //     fetch(`https://pick4me-api.herokuapp.com/comments/${id}`, {
+    //         method: 'DELETE'
+    //     })
+    //     .then(data => {
+    //         console.log("It's been deleted, trust me");
+    //         this.removeFromComments(array, id)
+    //     }).catch( err => console.log('this is error from handleDelete:', err))
+    //     this.fetchFavorites();
+    // }
+
+    //==============================================
+    //DELETE METHOD AND REMOVAL FROM FAVORITES ARRAY
+    //==============================================
+
+    handleFavoriteDelete(id, index, array){
+        console.log('this is delete', id, index, array);
+        fetch(`http://localhost:3000/favorites/${id}`, {
+            method: 'DELETE'
+        })
+        .then(data => {
+            console.log("It's been deleted, trust me");
+            this.removeFromFavoritesArray(array, index)
+        }).catch( err => console.log('this is error from handleDelete:', err))
+        this.fetchComments();
+        this.fetchFavorites();
+    }
 
     removeFromFavoritesArray(array, index){
         this.setState(prevState => {
@@ -430,17 +436,17 @@ class App extends Component {
             this.fetchFavorites();
         }
 
-    // handleCommentDelete(id, array){
-    //     console.log('this is delete comment', id);
-    //     fetch(`http://localhost:3000/comments/${id}`, {
-    //         method: 'DELETE'
-    //     })
-    //     .then(data => {
-    //         console.log("It's been deleted, trust me");
-    //         this.removeFromComments(array, id)
-    //     }).catch( err => console.log('this is error from handleDelete:', err))
-    //     this.fetchFavorites();
-    // }
+    handleCommentDelete(id, array){
+        console.log('this is delete comment', id);
+        fetch(`http://localhost:3000/comments/${id}`, {
+            method: 'DELETE'
+        })
+        .then(data => {
+            console.log("It's been deleted, trust me");
+            this.removeFromComments(array, id)
+        }).catch( err => console.log('this is error from handleDelete:', err))
+        this.fetchFavorites();
+    }
 
     removeFromComments(array, index){
         this.setState(prevState => {
@@ -469,44 +475,19 @@ class App extends Component {
     //HEROKU FETCH REQUESTS
     //======================
 
-    fetchFavorites(){
-        fetch('https://pick4me-api.herokuapp.com/favorites')
-            .then(data => data.json())
-        .then(jData => {
-            this.setState({
-                favorites: jData
-            })
-            console.log(this.state.favorites);
-        })
-    }
-
-    fetchComments(){
-        fetch('https://pick4me-api.herokuapp.com/comments')
-            .then(data => data.json())
-        .then(jData => {
-            this.setState({
-                comments: jData
-            })
-            console.log("this is jData in comment fetch:", jData);
-        })
-    }
-
-    //=====================
-    // LOCAL FETCH REQUESTS
-    //=====================
-
     // fetchFavorites(){
-    //     fetch('http://localhost:3000/favorites')
+    //     fetch('https://pick4me-api.herokuapp.com/favorites')
     //         .then(data => data.json())
     //     .then(jData => {
     //         this.setState({
     //             favorites: jData
     //         })
+    //         console.log(this.state.favorites);
     //     })
     // }
     //
     // fetchComments(){
-    //     fetch('http://localhost:3000/comments')
+    //     fetch('https://pick4me-api.herokuapp.com/comments')
     //         .then(data => data.json())
     //     .then(jData => {
     //         this.setState({
@@ -515,6 +496,31 @@ class App extends Component {
     //         console.log("this is jData in comment fetch:", jData);
     //     })
     // }
+
+    //=====================
+    // LOCAL FETCH REQUESTS
+    //=====================
+
+    fetchFavorites(){
+        fetch('http://localhost:3000/favorites')
+            .then(data => data.json())
+        .then(jData => {
+            this.setState({
+                favorites: jData
+            })
+        })
+    }
+
+    fetchComments(){
+        fetch('http://localhost:3000/comments')
+            .then(data => data.json())
+        .then(jData => {
+            this.setState({
+                comments: jData
+            })
+            console.log("this is jData in comment fetch:", jData);
+        })
+    }
 
     //=================
     //PREVENT INFINITE
