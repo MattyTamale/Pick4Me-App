@@ -614,6 +614,9 @@ class App extends Component {
                 </div>
                 <footer>
                     <a className="footerInfo" href="https://github.com/MattyTamale/Pick4Me-App/blob/master/README.md">About</a>
+                    <br />
+                    <br />
+                    <h5>Copyright 2019 Pick4Me</h5>
                 </footer>
             </div>
         )
